@@ -1118,9 +1118,14 @@
 
             function applyTheme(mode, animate) {
                 const effective = getEffectiveTheme(mode);
-                const oldTheme = htmlEl.getAttribute('data-theme') || 'system';
+                // 获取当前实际主题（用于动画判断）
+                const oldEffective = htmlEl.getAttribute('data-theme') || 'light';
 
-                if (animate && oldTheme !== mode) {
+                // 如果实际主题没有变化，但模式变了，我们仍需更新图标和存储
+                // 但动画只在视觉主题变化时触发
+                const visualChanged = (oldEffective !== effective);
+
+                if (animate && visualChanged) {
                     const overlayEl = overlay;
                     overlayEl.classList.remove('active', 'to-dark', 'to-light');
                     void overlayEl.offsetWidth;
@@ -1135,7 +1140,8 @@
                     }, 550);
                 }
 
-                htmlEl.setAttribute('data-theme', mode);
+                // 关键修复：将 data-theme 设置为实际生效的主题 (dark/light)，而不是 'system'
+                htmlEl.setAttribute('data-theme', effective);
                 setActiveIcon(mode);
                 localStorage.setItem(THEME_KEY, mode);
             }
@@ -1160,7 +1166,8 @@
                 if (mediaListener) return;
                 const media = window.matchMedia('(prefers-color-scheme: dark)');
                 mediaListener = function() {
-                    if (getCurrentMode() === 'system') {
+                    const mode = getCurrentMode();
+                    if (mode === 'system') {
                         applyTheme('system', false);
                     }
                 };
@@ -2089,7 +2096,7 @@
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 全部17个Unicode平面已加载 · 主题切换已集成 (与参考网站一致)');
+            console.log('✅ 全部17个Unicode平面已加载 · 主题切换已修复（跟随系统正确生效）');
         })();
     </script>
 
