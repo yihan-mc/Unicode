@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html style="height: 100%" data-theme="light">
+<html style="height: 100%" data-theme="system">
 <head>
     <meta charset="UTF-8">
     <title>全 Unicode 平面查看器</title>
     <style>
-        /* 基础重置 & 布局 */
+        /* ===== 基础重置 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -14,12 +14,15 @@
         body {
             height: 100%;
             font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-            background: #f5f6fa;
+            background: var(--bg-primary);
             transition: background 0.5s ease;
         }
 
-        /* ===== 主题变量 ===== */
+        /* ================================================================
+                   主题变量 (参考网站配色)
+                   ================================================================ */
         :root {
+            /* 日间 (默认) */
             --bg-primary: #f5f6fa;
             --bg-secondary: #ffffff;
             --bg-toolbar: #f8f9fc;
@@ -63,8 +66,14 @@
             --easing: ease;
             --nav-text: #ffffff;
             --nav-sub: rgba(255, 255, 255, 0.7);
+            --toggle-bg: rgba(255, 255, 255, 0.12);
+            --toggle-border: rgba(255, 255, 255, 0.2);
+            --toggle-hover-bg: rgba(255, 255, 255, 0.2);
+            --toggle-hover-border: rgba(255, 255, 255, 0.35);
+            --toggle-icon-color: #ffffff;
         }
 
+        /* ===== 夜间模式 ===== */
         [data-theme="dark"] {
             --bg-primary: #1a1a1e;
             --bg-secondary: #2a2a2e;
@@ -104,11 +113,18 @@
             --history-empty-color: #666666;
             --candidate-section-bg: #3a3a3e;
             --candidate-code-color: #888888;
-            --disabled-opacity: 0.4;
             --nav-text: #e8e8e8;
             --nav-sub: rgba(232, 232, 232, 0.7);
+            --toggle-bg: rgba(255, 255, 255, 0.06);
+            --toggle-border: rgba(255, 255, 255, 0.12);
+            --toggle-hover-bg: rgba(255, 255, 255, 0.14);
+            --toggle-hover-border: rgba(255, 255, 255, 0.25);
+            --toggle-icon-color: #e8e8e8;
         }
 
+        /* ================================================================
+                   布局
+                   ================================================================ */
         .layui-layout-admin {
             display: flex;
             flex-direction: column;
@@ -142,6 +158,11 @@
             opacity: 0.7;
             color: var(--nav-sub);
         }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
         .main_content {
             flex: 1;
@@ -167,7 +188,42 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* 工具栏 */
+        /* ================================================================
+                   主题切换按钮 (与参考网站完全一致)
+                   ================================================================ */
+        .vp-color-mode-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid var(--toggle-border);
+            background: var(--toggle-bg);
+            color: var(--toggle-icon-color);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            padding: 0;
+            outline: none;
+            flex-shrink: 0;
+        }
+        .vp-color-mode-switch:hover {
+            background: var(--toggle-hover-bg);
+            border-color: var(--toggle-hover-border);
+            transform: scale(1.05);
+        }
+        .vp-color-mode-switch .icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        .vp-color-mode-switch .icon.hidden {
+            display: none !important;
+        }
+
+        /* ===== 工具栏 ===== */
         .toolbar {
             background: var(--bg-toolbar);
             padding: 10px 16px;
@@ -200,7 +256,8 @@
             color: var(--text-secondary);
             outline: none;
             cursor: pointer;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
         }
         .toolbar select:focus {
             border-color: #5fb8ff;
@@ -214,7 +271,8 @@
             background: var(--bg-secondary);
             color: var(--text-secondary);
             outline: none;
-            transition: 0.2s, background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: 0.2s, background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         .toolbar input[type="text"]:focus {
             border-color: #5fb8ff;
@@ -249,7 +307,8 @@
             padding: 4px 14px;
             border-radius: 20px;
             white-space: nowrap;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing);
         }
 
         /* ---- 搜索选项按钮组 ---- */
@@ -266,7 +325,9 @@
             background: var(--bg-secondary);
             color: var(--text-muted);
             cursor: pointer;
-            transition: 0.15s, background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: 0.15s, background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
             user-select: none;
             white-space: nowrap;
         }
@@ -318,7 +379,6 @@
         .search-wrapper .clear-btn.visible {
             display: block;
         }
-        /* 搜索优先级提示 */
         .search-priority-hint {
             font-size: 12px;
             color: var(--text-muted);
@@ -327,7 +387,7 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* ---- 搜索面板（历史 & 候选） ---- */
+        /* ---- 搜索面板 ---- */
         .search-panel {
             position: absolute;
             top: calc(100% + 4px);
@@ -343,7 +403,9 @@
             display: none;
             max-height: 400px;
             overflow-y: auto;
-            transition: background var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing), box-shadow var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing),
+                box-shadow var(--transition-duration) var(--easing);
         }
         .search-panel.active {
             display: block;
@@ -357,7 +419,8 @@
             border-bottom: 1px solid var(--border-color);
             font-size: 13px;
             color: var(--history-header-color);
-            transition: color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
         }
         .history-header .clear-all-btn {
             background: none;
@@ -432,7 +495,8 @@
             color: var(--text-muted);
             font-weight: 600;
             background: var(--candidate-section-bg);
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing);
         }
         .candidate-section .section-title .count-badge {
             font-weight: normal;
@@ -471,7 +535,7 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* 分页控件 */
+        /* ===== 分页控件 ===== */
         .pagination {
             display: flex;
             align-items: center;
@@ -501,7 +565,9 @@
             text-align: center;
             background: var(--bg-secondary);
             color: var(--text-secondary);
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
         }
         .pagination .btn {
             padding: 4px 14px;
@@ -511,7 +577,8 @@
             cursor: pointer;
             background: var(--badge-bg);
             color: var(--text-secondary);
-            transition: 0.2s, background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
+            transition: 0.2s, background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing);
         }
         .pagination .btn:hover {
             background: var(--border-color);
@@ -523,7 +590,6 @@
         .pagination .btn-primary:hover {
             background: #3d9ee0;
         }
-        /* 禁用按钮样式 */
         .pagination .btn:disabled {
             opacity: var(--disabled-opacity);
             cursor: not-allowed;
@@ -534,7 +600,7 @@
             background: var(--badge-bg);
         }
 
-        /* 表格容器 */
+        /* ===== 表格 ===== */
         #resultContainer {
             border-radius: 10px;
             border: 1px solid var(--border-color);
@@ -559,7 +625,6 @@
             table-layout: fixed;
         }
 
-        /* 固定表头 */
         #resultHead {
             position: sticky;
             top: 0;
@@ -581,7 +646,9 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             height: 44px;
             vertical-align: middle;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
         }
         #resultHead th:first-child {
             min-width: 52px;
@@ -602,7 +669,8 @@
             vertical-align: middle;
             font-size: 13px;
             background: var(--bg-secondary);
-            transition: background 0.1s, color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: background 0.1s, color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
             word-break: break-all;
             position: relative;
             color: var(--text-secondary);
@@ -617,7 +685,9 @@
             font-size: 12px;
             border-right: 1px solid var(--border-color);
             white-space: nowrap;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
         }
 
         .unicode_str {
@@ -658,17 +728,18 @@
             padding: 0 4px;
             color: var(--ctrl-char-text);
             font-size: 13px;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                color var(--transition-duration) var(--easing);
         }
 
         .highlight-cell {
             background: var(--highlight-bg) !important;
             border-radius: 4px;
             box-shadow: 0 0 0 2px var(--highlight-shadow);
-            transition: background var(--transition-duration) var(--easing), box-shadow var(--transition-duration) var(--easing);
+            transition: background var(--transition-duration) var(--easing),
+                box-shadow var(--transition-duration) var(--easing);
         }
 
-        /* 复制按钮 */
         .copy-btn {
             display: inline-block;
             font-size: 12px;
@@ -699,6 +770,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
         }
 
+        /* ===== 底部 ===== */
         .footer-info {
             margin-top: 18px;
             text-align: center;
@@ -706,7 +778,8 @@
             font-size: 13px;
             border-top: 1px solid var(--footer-border);
             padding-top: 18px;
-            transition: color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: color var(--transition-duration) var(--easing),
+                border-color var(--transition-duration) var(--easing);
         }
         .footer-info a {
             color: #5fb8ff;
@@ -739,59 +812,9 @@
             opacity: 1;
         }
 
-        /* ===== 主题切换按钮 ===== */
-        .theme-toggle-wrapper {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 12px;
-        }
-        .theme-toggle-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px 4px 8px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            cursor: pointer;
-            font-size: 13px;
-            transition: background 0.2s, border-color 0.2s;
-            backdrop-filter: blur(4px);
-            font-family: inherit;
-            line-height: 28px;
-        }
-        .theme-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-        .theme-toggle-btn .toggle-icon {
-            font-size: 16px;
-            line-height: 1;
-        }
-        .theme-toggle-btn .toggle-label {
-            font-size: 12px;
-            opacity: 0.8;
-            white-space: nowrap;
-        }
-        /* 日间模式按钮样式 */
-        [data-theme="light"] .theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-        [data-theme="light"] .theme-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-        /* 夜间模式按钮样式 */
-        [data-theme="dark"] .theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-        [data-theme="dark"] .theme-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        /* ===== 过渡动画 ===== */
+        /* ================================================================
+                   过渡动画遮罩
+                   ================================================================ */
         .theme-transition-overlay {
             position: fixed;
             top: 0;
@@ -844,6 +867,9 @@
             }
         }
 
+        /* ================================================================
+                   响应式
+                   ================================================================ */
         @media (max-width: 640px) {
             .main_content {
                 padding: 12px;
@@ -907,14 +933,17 @@
             .layui-header .sub {
                 display: none;
             }
-            .theme-toggle-btn .toggle-label {
-                display: none;
+            .vp-color-mode-switch {
+                width: 30px;
+                height: 30px;
             }
-            .theme-toggle-btn {
-                padding: 4px 8px;
+            .vp-color-mode-switch .icon {
+                width: 17px;
+                height: 17px;
             }
         }
 
+        /* ===== 滚动条 ===== */
         .table-scroll-x::-webkit-scrollbar,
         .main_content::-webkit-scrollbar {
             width: 8px;
@@ -942,37 +971,38 @@
 
     <div class="layui-layout-admin">
 
-        <!-- 顶部导航 -->
+        <!-- ===== 顶部导航 ===== -->
         <header class="layui-header">
             <div class="logo">📋 <span>Unicode</span> 全平面查看器</div>
-            <div class="header-right" style="display:flex;align-items:center;gap:8px;">
-                <div class="theme-toggle-wrapper">
-                    <button class="theme-toggle-btn" id="themeToggle" title="切换主题">
-                        <span class="toggle-icon" id="themeIcon">🌙</span>
-                        <span class="toggle-label" id="themeLabel">跟随系统</span>
-                    </button>
-                </div>
+            <div class="header-right">
+                <!-- 主题切换按钮 (与参考网站完全一致) -->
+                <button type="button" class="vp-color-mode-switch" id="colorModeSwitch" title="切换主题">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon auto-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="auto icon" name="auto">
+                        <path d="M512 992C246.92 992 32 777.08 32 512S246.92 32 512 32s480 214.92 480 480-214.92 480-480 480zm0-840c-198.78 0-360 161.22-360 360 0 198.84 161.22 360 360 360s360-161.16 360-360c0-198.78-161.22-360-360-360zm0 660V212c165.72 0 300 134.34 300 300 0 165.72-134.28 300-300 300z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dark-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="dark icon" name="dark">
+                        <path d="M524.8 938.667h-4.267a439.893 439.893 0 0 1-313.173-134.4 446.293 446.293 0 0 1-11.093-597.334A432.213 432.213 0 0 1 366.933 90.027a42.667 42.667 0 0 1 45.227 9.386 42.667 42.667 0 0 1 10.24 42.667 358.4 358.4 0 0 0 82.773 375.893 361.387 361.387 0 0 0 376.747 82.774 42.667 42.667 0 0 1 54.187 55.04 433.493 433.493 0 0 1-99.84 154.88 438.613 438.613 0 0 1-311.467 128z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon light-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="light icon" name="light">
+                        <path d="M952 552h-80a40 40 0 0 1 0-80h80a40 40 0 0 1 0 80zM801.88 280.08a41 41 0 0 1-57.96-57.96l57.96-58a41.04 41.04 0 0 1 58 58l-58 57.96zM512 752a240 240 0 1 1 0-480 240 240 0 0 1 0 480zm0-560a40 40 0 0 1-40-40V72a40 40 0 0 1 80 0v80a40 40 0 0 1-40 40zm-289.88 88.08-58-57.96a41.04 41.04 0 0 1 58-58l57.96 58a41 41 0 0 1-57.96 57.96zM192 512a40 40 0 0 1-40 40H72a40 40 0 0 1 0-80h80a40 40 0 0 1 40 40zm30.12 231.92a41 41 0 0 1 57.96 57.96l-57.96 58a41.04 41.04 0 0 1-58-58l58-57.96zM512 832a40 40 0 0 1 40 40v80a40 40 0 0 1-80 0v-80a40 40 0 0 1 40-40zm289.88-88.08 58 57.96a41.04 41.04 0 0 1-58 58l-57.96-58a41 41 0 0 1 57.96-57.96z"></path>
+                    </svg>
+                </button>
                 <div class="sub" id="planeSub">BMP · U+0000 – U+FFFF</div>
             </div>
         </header>
 
-        <!-- 主内容 -->
+        <!-- ===== 主内容 ===== -->
         <div class="main_content" id="mainContent">
 
             <div class="page-title">全 Unicode 平面查看器</div>
             <div class="page-desc" id="planeDesc">基本多文种平面 (BMP) · 共 65,536 个字符 · 点击 📋 复制字符</div>
 
-            <!-- 工具栏 - 两行布局 -->
+            <!-- 工具栏 -->
             <div class="toolbar">
-                <!-- 第一行：字符集 -->
                 <div class="toolbar-row">
                     <label for="planeSelect">📂 字符集</label>
-                    <select id="planeSelect">
-                        <!-- 由 JS 动态生成所有平面选项 -->
-                    </select>
+                    <select id="planeSelect"></select>
                 </div>
-
-                <!-- 第二行：搜索相关 -->
                 <div class="toolbar-row">
                     <label for="searchMode">🔍 范围</label>
                     <select id="searchMode">
@@ -981,19 +1011,15 @@
                         <option value="all">全字符集</option>
                     </select>
 
-                    <!-- 搜索选项按钮组 -->
                     <span class="search-options" id="searchOptions">
                         <span class="opt-btn active" data-opt="decimal">十进制</span>
                         <span class="opt-btn active" data-opt="hex">十六进制</span>
                         <span class="opt-btn active" data-opt="char">字符</span>
                     </span>
 
-                    <!-- 搜索输入框 + 清除按钮 + 双面板 -->
                     <div class="search-wrapper" id="searchWrapper">
                         <input type="text" id="searchInput" placeholder="关键词" autocomplete="off">
                         <button class="clear-btn" id="clearSearchBtn" title="清除">✕</button>
-
-                        <!-- 历史面板 -->
                         <div class="search-panel" id="historyPanel">
                             <div class="history-header">
                                 <span>搜索历史</span>
@@ -1001,29 +1027,22 @@
                             </div>
                             <ul class="history-list" id="historyList"></ul>
                         </div>
-
-                        <!-- 候选面板 -->
-                        <div class="search-panel" id="candidatePanel">
-                            <!-- 由 JS 动态填充 -->
-                        </div>
+                        <div class="search-panel" id="candidatePanel"></div>
                     </div>
-                    <!-- 优先级提示 -->
                     <span class="search-priority-hint">(十六进制优先)</span>
 
                     <button class="btn" id="searchBtn">定位</button>
                     <button class="btn btn-outline" id="resetBtn">重置</button>
-
-                    <!-- 计数徽章靠右 -->
                     <span class="badge" id="countBadge">共 65,536 个字符</span>
                 </div>
             </div>
 
-            <!-- 分页控件 -->
+            <!-- 分页 -->
             <div class="pagination">
                 <button class="btn" id="prevPage" title="上一页">◀ 上一页</button>
                 <span class="info">第 <strong id="currentPageDisplay">1</strong> / <span id="totalPagesDisplay">256</span> 页</span>
                 <button class="btn" id="nextPage" title="下一页">下一页 ▶</button>
-                <span style="margin-left: 8px;">跳转</span>
+                <span style="margin-left:8px;">跳转</span>
                 <input type="number" id="pageJump" min="1" max="256" value="1">
                 <button class="btn btn-primary" id="jumpBtn">GO</button>
                 <button class="btn" id="firstPageBtn">首页</button>
@@ -1036,16 +1055,13 @@
                     <table class="layui-table" id="resultTable">
                         <thead id="resultHead">
                             <tr>
-                                <th></th>
-                                <th>0</th><th>1</th><th>2</th><th>3</th>
+                                <th></th><th>0</th><th>1</th><th>2</th><th>3</th>
                                 <th>4</th><th>5</th><th>6</th><th>7</th>
                                 <th>8</th><th>9</th><th>A</th><th>B</th>
                                 <th>C</th><th>D</th><th>E</th><th>F</th>
                             </tr>
                         </thead>
-                        <tbody id="resultBody">
-                            <!-- 由 JS 动态生成 -->
-                        </tbody>
+                        <tbody id="resultBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -1060,143 +1076,108 @@
     <!-- 过渡遮罩 -->
     <div class="theme-transition-overlay" id="themeTransition"></div>
 
-    <!-- 复制成功提示 -->
+    <!-- 复制提示 -->
     <div id="copyToast">✅ 已复制到剪贴板</div>
 
     <script>
         (function() {
             'use strict';
 
-            // ============================================================
-            // 1. 主题切换模块（从参考网站移植并增强）
-            // ============================================================
+            // ================================================================
+            // 1. 主题切换模块 (与参考网站完全一致)
+            // ================================================================
 
-            const STORAGE_KEY = 'unicode_viewer_theme';
-            const THEMES = ['system', 'light', 'dark'];
-            const THEME_ICONS = {
-                system: '🔄',
-                light: '☀️',
-                dark: '🌙'
-            };
-            const THEME_LABELS = {
-                system: '跟随系统',
-                light: '日间',
-                dark: '夜间'
+            const THEME_KEY = 'unicode_viewer_theme';
+            const MODES = ['system', 'light', 'dark'];
+            const MODE_ICONS = {
+                system: 'auto-icon',
+                light: 'light-icon',
+                dark: 'dark-icon'
             };
 
-            // DOM 元素
             const htmlEl = document.documentElement;
-            const themeBtn = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const themeLabel = document.getElementById('themeLabel');
-            const transitionOverlay = document.getElementById('themeTransition');
+            const switchBtn = document.getElementById('colorModeSwitch');
+            const overlay = document.getElementById('themeTransition');
+            const autoIcon = switchBtn.querySelector('.auto-icon');
+            const darkIcon = switchBtn.querySelector('.dark-icon');
+            const lightIcon = switchBtn.querySelector('.light-icon');
 
-            // 获取系统主题
             function getSystemTheme() {
                 return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             }
 
-            // 获取当前有效主题（实际应用的主题）
             function getEffectiveTheme(mode) {
-                if (mode === 'system') {
-                    return getSystemTheme();
-                }
-                return mode;
+                return mode === 'system' ? getSystemTheme() : mode;
             }
 
-            // 应用主题
-            function applyTheme(mode, animate = true) {
+            function setActiveIcon(mode) {
+                [autoIcon, darkIcon, lightIcon].forEach(el => el.classList.add('hidden'));
+                const active = switchBtn.querySelector('.' + MODE_ICONS[mode]);
+                if (active) active.classList.remove('hidden');
+            }
+
+            function applyTheme(mode, animate) {
                 const effective = getEffectiveTheme(mode);
+                const oldTheme = htmlEl.getAttribute('data-theme') || 'system';
 
-                // 更新 data-theme
-                const oldTheme = htmlEl.getAttribute('data-theme') || 'light';
-                const newTheme = effective;
-
-                if (oldTheme !== newTheme && animate) {
-                    // 执行过渡动画
-                    const overlay = transitionOverlay;
-                    overlay.classList.remove('active', 'to-dark', 'to-light');
-
-                    // 强制重排
-                    void overlay.offsetWidth;
-
-                    if (newTheme === 'dark') {
-                        overlay.classList.add('to-dark');
+                if (animate && oldTheme !== mode) {
+                    const overlayEl = overlay;
+                    overlayEl.classList.remove('active', 'to-dark', 'to-light');
+                    void overlayEl.offsetWidth;
+                    if (effective === 'dark') {
+                        overlayEl.classList.add('to-dark');
                     } else {
-                        overlay.classList.add('to-light');
+                        overlayEl.classList.add('to-light');
                     }
-                    overlay.classList.add('active');
-
-                    // 动画结束后移除遮罩
+                    overlayEl.classList.add('active');
                     setTimeout(() => {
-                        overlay.classList.remove('active', 'to-dark', 'to-light');
+                        overlayEl.classList.remove('active', 'to-dark', 'to-light');
                     }, 550);
                 }
 
-                // 应用主题
-                htmlEl.setAttribute('data-theme', effective);
-
-                // 更新按钮状态
-                updateButtonState(mode);
-
-                // 保存到 localStorage
-                localStorage.setItem(STORAGE_KEY, mode);
+                htmlEl.setAttribute('data-theme', mode);
+                setActiveIcon(mode);
+                localStorage.setItem(THEME_KEY, mode);
             }
 
-            // 更新按钮显示
-            function updateButtonState(mode) {
-                themeIcon.textContent = THEME_ICONS[mode] || '🔄';
-                themeLabel.textContent = THEME_LABELS[mode] || '跟随系统';
-            }
-
-            // 获取当前模式
             function getCurrentMode() {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved && THEMES.includes(saved)) {
-                    return saved;
-                }
+                const saved = localStorage.getItem(THEME_KEY);
+                if (saved && MODES.includes(saved)) return saved;
                 return 'system';
             }
 
-            // 循环切换
             function cycleTheme() {
                 const current = getCurrentMode();
-                const idx = THEMES.indexOf(current);
-                const next = THEMES[(idx + 1) % THEMES.length];
+                const idx = MODES.indexOf(current);
+                const next = MODES[(idx + 1) % MODES.length];
                 applyTheme(next, true);
             }
 
             // 监听系统主题变化
-            let systemThemeListener = null;
+            let mediaListener = null;
 
-            function startSystemThemeListener() {
-                if (systemThemeListener) return;
+            function startSystemListener() {
+                if (mediaListener) return;
                 const media = window.matchMedia('(prefers-color-scheme: dark)');
-                systemThemeListener = function(e) {
-                    const mode = getCurrentMode();
-                    if (mode === 'system') {
-                        // 如果当前是跟随系统模式，自动更新
+                mediaListener = function() {
+                    if (getCurrentMode() === 'system') {
                         applyTheme('system', false);
                     }
                 };
-                media.addEventListener('change', systemThemeListener);
+                media.addEventListener('change', mediaListener);
             }
 
-            // 初始化主题
             function initTheme() {
                 const mode = getCurrentMode();
                 applyTheme(mode, false);
-                startSystemThemeListener();
-
-                // 按钮点击事件
-                themeBtn.addEventListener('click', cycleTheme);
+                startSystemListener();
+                switchBtn.addEventListener('click', cycleTheme);
             }
 
-            // ============================================================
-            // 2. 原有 Unicode 查看器代码（保持完全不变）
-            // ============================================================
+            // ================================================================
+            // 2. Unicode 查看器 (原封不动保留)
+            // ================================================================
 
-            // ---------- 所有 17 个 Unicode 平面配置 ----------
             const PLANES = {
                 '0x0000': { name: 'BMP', label: '基本多文种平面', range: 'U+0000 – U+FFFF' },
                 '0x10000': { name: 'SMP', label: '补充多文种平面', range: 'U+10000 – U+1FFFF' },
@@ -1217,7 +1198,6 @@
                 '0x100000': { name: 'PUA-B', label: '私有使用区-B', range: 'U+100000 – U+10FFFF' }
             };
 
-            // ---------- 工具函数 ----------
             function getSortedPlaneKeys() {
                 return Object.keys(PLANES).sort((a, b) => parseInt(a) - parseInt(b));
             }
@@ -1261,21 +1241,18 @@
             const PAGE_SIZE = 256;
             const TOTAL_PAGES = TOTAL_PER_PLANE / PAGE_SIZE;
 
-            // ---------- 状态 ----------
             let currentPlaneStart = 0x0000;
             let currentData = [];
             let currentPage = 1;
             let highlightCode = -1;
             const planeDataCache = {};
 
-            // 搜索选项状态 (默认全开)
             let searchOpts = {
                 decimal: true,
                 hex: true,
                 char: true
             };
 
-            // DOM 引用
             const tbody = document.getElementById('resultBody');
             const currentPageDisplay = document.getElementById('currentPageDisplay');
             const totalPagesDisplay = document.getElementById('totalPagesDisplay');
@@ -1302,18 +1279,16 @@
 
             totalPagesDisplay.textContent = TOTAL_PAGES;
 
-            // ---------- 彩蛋 ----------
+            // 彩蛋
             easterEgg.addEventListener('click', function() {
                 try {
                     const audio = new Audio('咕咕嘎嘎.mp3');
                     audio.play();
-                } catch (e) {
-                    console.warn('音频播放失败:', e);
-                }
+                } catch (e) { console.warn('音频播放失败:', e); }
                 alert('🐧咕咕嘎嘎🐧');
             });
 
-            // ---------- 历史记录管理 ----------
+            // 历史记录
             const HISTORY_STORAGE_KEY = 'unicode_viewer_history';
             const MAX_HISTORY = 20;
 
@@ -1373,9 +1348,7 @@
                     delBtn.className = 'del-one-btn';
                     delBtn.textContent = '✕';
                     delBtn.title = '删除该条';
-                    delBtn.addEventListener('mousedown', function(e) {
-                        e.stopPropagation();
-                    });
+                    delBtn.addEventListener('mousedown', function(e) { e.stopPropagation(); });
                     delBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         removeHistoryItem(item);
@@ -1400,7 +1373,6 @@
                 });
             }
 
-            // ---------- 清除按钮显示控制 ----------
             function updateClearBtn() {
                 if (searchInput.value.length > 0) {
                     clearSearchBtn.classList.add('visible');
@@ -1409,7 +1381,6 @@
                 }
             }
 
-            // ---------- 面板切换 ----------
             function updatePanels() {
                 const hasFocus = document.activeElement === searchInput;
                 if (!hasFocus) {
@@ -1429,7 +1400,6 @@
                 }
             }
 
-            // ---------- 候选生成 ----------
             function renderCandidates(keyword) {
                 const mode = searchMode.value;
                 const hexEnabled = searchOpts.hex;
@@ -1537,7 +1507,6 @@
                 });
             }
 
-            // ---------- 生成指定平面的数据 (并缓存) ----------
             function generatePlaneData(start) {
                 if (planeDataCache[start] !== undefined) {
                     return planeDataCache[start];
@@ -1579,7 +1548,6 @@
                 return data;
             }
 
-            // ---------- 切换平面 ----------
             function switchPlane(start, options = {}) {
                 const resetHighlight = options.resetHighlight !== undefined ? options.resetHighlight : true;
                 const clearSearch = options.clearSearch !== undefined ? options.clearSearch : true;
@@ -1614,7 +1582,6 @@
                 updateNavButtons();
             }
 
-            // ---------- 更新上一页/下一页按钮状态 ----------
             function updateNavButtons() {
                 const isFirstPlaneFirstPage = (currentPlaneStart === 0x0000 && currentPage === 1);
                 prevPageBtn.disabled = isFirstPlaneFirstPage;
@@ -1625,7 +1592,6 @@
                 nextPageBtn.title = isLastPlaneLastPage ? '已是最后一个平面末页' : '下一页';
             }
 
-            // ---------- 渲染当前页 ----------
             function renderPage(page) {
                 if (page < 1) page = 1;
                 if (page > TOTAL_PAGES) page = TOTAL_PAGES;
@@ -1690,7 +1656,7 @@
                 updateNavButtons();
             }
 
-            // ---------- 复制功能 ----------
+            // 复制
             tbody.addEventListener('click', function(e) {
                 const btn = e.target.closest('.copy-btn');
                 if (!btn) return;
@@ -1699,9 +1665,7 @@
                 let char;
                 try {
                     char = String.fromCodePoint(code);
-                } catch (_) {
-                    char = '';
-                }
+                } catch (_) { char = ''; }
                 if (!char) {
                     showToast('⚠️ 无法复制该字符');
                     return;
@@ -1717,9 +1681,7 @@
                                 btn.textContent = '📋';
                             }, 1200);
                         })
-                        .catch(() => {
-                            fallbackCopy(char, btn);
-                        });
+                        .catch(() => { fallbackCopy(char, btn); });
                 } else {
                     fallbackCopy(char, btn);
                 }
@@ -1758,7 +1720,7 @@
                 }, 2000);
             }
 
-            // ---------- 搜索选项按钮交互 ----------
+            // 搜索选项
             searchOptionsContainer.addEventListener('click', function(e) {
                 const btn = e.target.closest('.opt-btn');
                 if (!btn) return;
@@ -1771,7 +1733,7 @@
                 }
             });
 
-            // ---------- 核心搜索函数 ----------
+            // 核心搜索
             function searchAndLocate(keyword) {
                 let kw = keyword;
                 if (typeof keyword === 'number') {
@@ -1939,7 +1901,6 @@
                 }
             }
 
-            // ---------- 分页导航 ----------
             function goToPage(page) {
                 if (page < 1) page = 1;
                 if (page > TOTAL_PAGES) page = TOTAL_PAGES;
@@ -1949,7 +1910,7 @@
                 renderPage(page);
             }
 
-            // ---------- 事件绑定 ----------
+            // ---- 事件绑定 ----
             planeSelect.addEventListener('change', function() {
                 const val = this.value;
                 const start = parseInt(val);
@@ -2108,7 +2069,6 @@
                     `;
             document.head.appendChild(styleExtra);
 
-            // ---------- 动态生成下拉选项 ----------
             function populatePlaneSelect() {
                 planeSelect.innerHTML = '';
                 const sortedKeys = getSortedPlaneKeys();
@@ -2121,19 +2081,15 @@
                 });
             }
 
-            // ============================================================
-            // 3. 初始化
-            // ============================================================
-
-            // 先初始化主题（确保页面加载时主题正确）
+            // ================================================================
+            // 3. 启动
+            // ================================================================
             initTheme();
-
-            // 再初始化 Unicode 查看器
             populatePlaneSelect();
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 全部17个Unicode平面已加载，智能候选搜索已启用，彩蛋已添加，主题切换已集成。');
+            console.log('✅ 全部17个Unicode平面已加载 · 主题切换已集成 (与参考网站一致)');
         })();
     </script>
 
