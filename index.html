@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="height: 100%">
+<html style="height: 100%" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <title>全 Unicode 平面查看器</title>
@@ -15,6 +15,98 @@
             height: 100%;
             font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
             background: #f5f6fa;
+            transition: background 0.5s ease;
+        }
+
+        /* ===== 主题变量 ===== */
+        :root {
+            --bg-primary: #f5f6fa;
+            --bg-secondary: #ffffff;
+            --bg-toolbar: #f8f9fc;
+            --bg-panel: #ffffff;
+            --bg-header: #23262e;
+            --text-primary: #1a1a2e;
+            --text-secondary: #333333;
+            --text-muted: #888888;
+            --border-color: #dce1eb;
+            --shadow-color: rgba(0, 0, 0, 0.12);
+            --badge-bg: #eef2f7;
+            --badge-text: #666666;
+            --hover-bg: #f5f7fa;
+            --table-header-bg: #eef2f7;
+            --table-border: #d0d7e5;
+            --row-hover: #f8faff;
+            --ctrl-char-bg: #fff3e0;
+            --ctrl-char-text: #b77a3a;
+            --highlight-bg: #ffecb3;
+            --highlight-shadow: #ffb300;
+            --footer-border: #edf0f6;
+            --footer-text: #aab3c8;
+            --scrollbar-track: #f0f2f7;
+            --scrollbar-thumb: #d0d7e5;
+            --scrollbar-thumb-hover: #b8c2d4;
+            --btn-primary-bg: #5fb8ff;
+            --btn-primary-text: #ffffff;
+            --btn-primary-hover: #3d9ee0;
+            --btn-outline-border: #5fb8ff;
+            --btn-outline-text: #5fb8ff;
+            --btn-outline-hover: #eef6ff;
+            --search-panel-bg: #ffffff;
+            --search-panel-border: #dce1eb;
+            --history-header-color: #888888;
+            --history-item-hover: #f5f7fa;
+            --history-empty-color: #b0b8c8;
+            --candidate-section-bg: #fafbfc;
+            --candidate-code-color: #888888;
+            --disabled-opacity: 0.4;
+            --transition-duration: 0.5s;
+            --easing: ease;
+            --nav-text: #ffffff;
+            --nav-sub: rgba(255, 255, 255, 0.7);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1e;
+            --bg-secondary: #2a2a2e;
+            --bg-toolbar: #2a2a2e;
+            --bg-panel: #2a2a2e;
+            --bg-header: #1a1a1e;
+            --text-primary: #e8e8e8;
+            --text-secondary: #cccccc;
+            --text-muted: #999999;
+            --border-color: #4a4a4e;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --badge-bg: #3a3a3e;
+            --badge-text: #aaaaaa;
+            --hover-bg: #3a3a3e;
+            --table-header-bg: #3a3a3e;
+            --table-border: #4a4a4e;
+            --row-hover: #3a3a3e;
+            --ctrl-char-bg: #5a3a2a;
+            --ctrl-char-text: #d4a574;
+            --highlight-bg: #5a4a2a;
+            --highlight-shadow: #d4a030;
+            --footer-border: #3a3a3e;
+            --footer-text: #777777;
+            --scrollbar-track: #2a2a2e;
+            --scrollbar-thumb: #4a4a4e;
+            --scrollbar-thumb-hover: #5a5a5e;
+            --btn-primary-bg: #5fb8ff;
+            --btn-primary-text: #ffffff;
+            --btn-primary-hover: #3d9ee0;
+            --btn-outline-border: #5fb8ff;
+            --btn-outline-text: #5fb8ff;
+            --btn-outline-hover: #2a4a6a;
+            --search-panel-bg: #2a2a2e;
+            --search-panel-border: #4a4a4e;
+            --history-header-color: #999999;
+            --history-item-hover: #3a3a3e;
+            --history-empty-color: #666666;
+            --candidate-section-bg: #3a3a3e;
+            --candidate-code-color: #888888;
+            --disabled-opacity: 0.4;
+            --nav-text: #e8e8e8;
+            --nav-sub: rgba(232, 232, 232, 0.7);
         }
 
         .layui-layout-admin {
@@ -24,8 +116,8 @@
         }
 
         .layui-header {
-            background: #23262e;
-            color: #fff;
+            background: var(--bg-header);
+            color: var(--nav-text);
             height: 56px;
             line-height: 56px;
             padding: 0 24px;
@@ -35,6 +127,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
         }
         .layui-header .logo {
             font-size: 18px;
@@ -47,38 +140,43 @@
         .layui-header .sub {
             font-size: 13px;
             opacity: 0.7;
+            color: var(--nav-sub);
         }
 
         .main_content {
             flex: 1;
-            background: #fff;
+            background: var(--bg-primary);
             padding: 20px 24px 30px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            transition: background var(--transition-duration) var(--easing);
         }
 
         .page-title {
             font-size: 20px;
             font-weight: 600;
-            color: #1a1a2e;
+            color: var(--text-primary);
             margin-bottom: 4px;
+            transition: color var(--transition-duration) var(--easing);
         }
         .page-desc {
-            color: #888;
+            color: var(--text-muted);
             font-size: 14px;
             margin-bottom: 16px;
+            transition: color var(--transition-duration) var(--easing);
         }
 
         /* 工具栏 */
         .toolbar {
-            background: #f8f9fc;
+            background: var(--bg-toolbar);
             padding: 10px 16px;
             border-radius: 8px;
             margin-bottom: 12px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transition: background var(--transition-duration) var(--easing);
         }
         .toolbar-row {
             display: flex;
@@ -89,29 +187,34 @@
         .toolbar label {
             font-size: 14px;
             font-weight: 500;
-            color: #333;
+            color: var(--text-secondary);
             margin-right: 2px;
+            transition: color var(--transition-duration) var(--easing);
         }
         .toolbar select {
             padding: 6px 12px;
-            border: 1px solid #dce1eb;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            background: #fff;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
             outline: none;
             cursor: pointer;
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         .toolbar select:focus {
             border-color: #5fb8ff;
         }
         .toolbar input[type="text"] {
             padding: 6px 12px;
-            border: 1px solid #dce1eb;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
             width: 160px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
             outline: none;
-            transition: 0.2s;
+            transition: 0.2s, background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         .toolbar input[type="text"]:focus {
             border-color: #5fb8ff;
@@ -123,29 +226,30 @@
             border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
-            background: #5fb8ff;
-            color: #fff;
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
             transition: 0.2s;
         }
         .toolbar .btn:hover {
-            background: #3d9ee0;
+            background: var(--btn-primary-hover);
         }
         .toolbar .btn-outline {
             background: transparent;
-            color: #5fb8ff;
-            border: 1px solid #5fb8ff;
+            color: var(--btn-outline-text);
+            border: 1px solid var(--btn-outline-border);
         }
         .toolbar .btn-outline:hover {
-            background: #eef6ff;
+            background: var(--btn-outline-hover);
         }
         .toolbar .badge {
             margin-left: auto;
             font-size: 13px;
-            color: #666;
-            background: #eef2f7;
+            color: var(--badge-text);
+            background: var(--badge-bg);
             padding: 4px 14px;
             border-radius: 20px;
             white-space: nowrap;
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
         }
 
         /* ---- 搜索选项按钮组 ---- */
@@ -156,18 +260,18 @@
         }
         .search-options .opt-btn {
             padding: 4px 12px;
-            border: 1px solid #d0d7e5;
+            border: 1px solid var(--border-color);
             border-radius: 14px;
             font-size: 12px;
-            background: #fff;
-            color: #666;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
             cursor: pointer;
-            transition: 0.15s;
+            transition: 0.15s, background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
             user-select: none;
             white-space: nowrap;
         }
         .search-options .opt-btn:hover {
-            background: #eef2f7;
+            background: var(--hover-bg);
         }
         .search-options .opt-btn.active {
             background: #5fb8ff;
@@ -199,7 +303,7 @@
             height: 18px;
             border-radius: 50%;
             border: none;
-            background: #d0d7e5;
+            background: var(--border-color);
             color: #fff;
             font-size: 12px;
             line-height: 18px;
@@ -217,9 +321,10 @@
         /* 搜索优先级提示 */
         .search-priority-hint {
             font-size: 12px;
-            color: #999;
+            color: var(--text-muted);
             margin-left: 4px;
             white-space: nowrap;
+            transition: color var(--transition-duration) var(--easing);
         }
 
         /* ---- 搜索面板（历史 & 候选） ---- */
@@ -229,15 +334,16 @@
             left: 0;
             width: 100%;
             max-width: 360px;
-            background: #fff;
-            border: 1px solid #dce1eb;
+            background: var(--search-panel-bg);
+            border: 1px solid var(--search-panel-border);
             border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 20px var(--shadow-color);
             padding: 8px 0;
             z-index: 200;
             display: none;
             max-height: 400px;
             overflow-y: auto;
+            transition: background var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing), box-shadow var(--transition-duration) var(--easing);
         }
         .search-panel.active {
             display: block;
@@ -248,14 +354,15 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 12px 6px 12px;
-            border-bottom: 1px solid #f0f2f7;
+            border-bottom: 1px solid var(--border-color);
             font-size: 13px;
-            color: #888;
+            color: var(--history-header-color);
+            transition: color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         .history-header .clear-all-btn {
             background: none;
             border: none;
-            color: #d0d7e5;
+            color: var(--border-color);
             cursor: pointer;
             font-size: 14px;
             transition: color 0.15s;
@@ -278,9 +385,10 @@
             font-size: 13px;
             cursor: pointer;
             transition: background 0.1s;
+            color: var(--text-secondary);
         }
         .history-list li:hover {
-            background: #f5f7fa;
+            background: var(--history-item-hover);
         }
         .history-list li .history-text {
             flex: 1;
@@ -291,7 +399,7 @@
         .history-list li .del-one-btn {
             background: none;
             border: none;
-            color: #d0d7e5;
+            color: var(--border-color);
             cursor: pointer;
             font-size: 13px;
             padding: 0 4px;
@@ -304,14 +412,16 @@
         .history-empty {
             padding: 12px;
             text-align: center;
-            color: #b0b8c8;
+            color: var(--history-empty-color);
             font-size: 13px;
+            transition: color var(--transition-duration) var(--easing);
         }
 
         /* 候选区 */
         .candidate-section {
             padding: 4px 0;
-            border-bottom: 1px solid #f0f2f7;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color var(--transition-duration) var(--easing);
         }
         .candidate-section:last-child {
             border-bottom: none;
@@ -319,14 +429,16 @@
         .candidate-section .section-title {
             padding: 2px 12px 2px 12px;
             font-size: 12px;
-            color: #888;
+            color: var(--text-muted);
             font-weight: 600;
-            background: #fafbfc;
+            background: var(--candidate-section-bg);
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
         }
         .candidate-section .section-title .count-badge {
             font-weight: normal;
-            color: #aaa;
+            color: var(--text-muted);
             margin-left: 6px;
+            transition: color var(--transition-duration) var(--easing);
         }
         .candidate-list {
             list-style: none;
@@ -341,9 +453,10 @@
             cursor: pointer;
             transition: background 0.1s;
             gap: 8px;
+            color: var(--text-secondary);
         }
         .candidate-list li:hover {
-            background: #f5f7fa;
+            background: var(--history-item-hover);
         }
         .candidate-list li .candidate-char {
             font-size: 18px;
@@ -352,9 +465,10 @@
             flex-shrink: 0;
         }
         .candidate-list li .candidate-code {
-            color: #888;
+            color: var(--candidate-code-color);
             font-family: monospace;
             font-size: 12px;
+            transition: color var(--transition-duration) var(--easing);
         }
 
         /* 分页控件 */
@@ -363,25 +477,31 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
-            background: #f8f9fc;
+            background: var(--bg-toolbar);
             padding: 8px 16px;
             border-radius: 8px;
             margin-bottom: 12px;
+            transition: background var(--transition-duration) var(--easing);
         }
         .pagination .info {
             font-size: 14px;
-            color: #333;
+            color: var(--text-secondary);
+            transition: color var(--transition-duration) var(--easing);
         }
         .pagination .info strong {
-            color: #1a1a2e;
+            color: var(--text-primary);
+            transition: color var(--transition-duration) var(--easing);
         }
         .pagination input[type="number"] {
             width: 60px;
             padding: 4px 6px;
-            border: 1px solid #dce1eb;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
             text-align: center;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         .pagination .btn {
             padding: 4px 14px;
@@ -389,12 +509,12 @@
             border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
-            background: #eef2f7;
-            color: #333;
-            transition: 0.2s;
+            background: var(--badge-bg);
+            color: var(--text-secondary);
+            transition: 0.2s, background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
         }
         .pagination .btn:hover {
-            background: #dce1eb;
+            background: var(--border-color);
         }
         .pagination .btn-primary {
             background: #5fb8ff;
@@ -405,23 +525,24 @@
         }
         /* 禁用按钮样式 */
         .pagination .btn:disabled {
-            opacity: 0.4;
+            opacity: var(--disabled-opacity);
             cursor: not-allowed;
-            background: #eef2f7;
-            color: #aaa;
+            background: var(--badge-bg);
+            color: var(--text-muted);
         }
         .pagination .btn:disabled:hover {
-            background: #eef2f7;
+            background: var(--badge-bg);
         }
 
         /* 表格容器 */
         #resultContainer {
             border-radius: 10px;
-            border: 1px solid #e8ecf3;
+            border: 1px solid var(--border-color);
             overflow: hidden;
             flex: 1;
             display: flex;
             flex-direction: column;
+            transition: border-color var(--transition-duration) var(--easing);
         }
         .table-scroll-x {
             overflow-x: auto;
@@ -445,12 +566,12 @@
             z-index: 50;
         }
         #resultHead th {
-            background: #eef2f7 !important;
-            color: #1a1a2e;
+            background: var(--table-header-bg) !important;
+            color: var(--text-primary);
             font-weight: 600;
             padding: 10px 4px;
             text-align: center;
-            border-bottom: 2px solid #d0d7e5;
+            border-bottom: 2px solid var(--table-border);
             position: sticky;
             top: 0;
             z-index: 50;
@@ -460,82 +581,91 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             height: 44px;
             vertical-align: middle;
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         #resultHead th:first-child {
             min-width: 52px;
             width: 52px;
-            background: #e4e9f2 !important;
-            border-right: 1px solid #d0d7e5;
+            background: var(--table-header-bg) !important;
+            border-right: 1px solid var(--table-border);
         }
         #resultHead th:not(:first-child) {
             width: calc((100% - 52px) / 16);
             min-width: 42px;
-            background: #eef2f7 !important;
+            background: var(--table-header-bg) !important;
         }
 
         #resultBody td {
             padding: 6px 2px;
             text-align: center;
-            border-bottom: 1px solid #f0f2f7;
+            border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
             font-size: 13px;
-            background: #fff;
-            transition: background 0.1s;
+            background: var(--bg-secondary);
+            transition: background 0.1s, color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
             word-break: break-all;
             position: relative;
+            color: var(--text-secondary);
         }
         #resultBody tr:hover td {
-            background: #f8faff;
+            background: var(--row-hover);
         }
         #resultBody td:first-child {
-            background: #fafbfd;
+            background: var(--bg-toolbar);
             font-weight: 500;
-            color: #4a5a7a;
+            color: var(--text-muted);
             font-size: 12px;
-            border-right: 1px solid #eef0f5;
+            border-right: 1px solid var(--border-color);
             white-space: nowrap;
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
 
         .unicode_str {
             font-size: 18px;
             line-height: 1.6;
             min-height: 28px;
-            color: #1a1a2e;
+            color: var(--text-primary);
             font-family: "Segoe UI", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
             flex-wrap: wrap;
+            transition: color var(--transition-duration) var(--easing);
         }
         .unicode_str .empty-placeholder {
-            color: #c0c8d8;
+            color: var(--text-muted);
             font-size: 12px;
+            transition: color var(--transition-duration) var(--easing);
         }
         .unicode_hex {
             font-size: 11px;
-            color: #7a8aa0;
+            color: var(--text-muted);
             font-family: "SF Mono", "Menlo", monospace;
             margin-top: 1px;
+            transition: color var(--transition-duration) var(--easing);
         }
         .unicode_decimal {
             font-size: 10px;
-            color: #aab3c8;
+            color: var(--text-muted);
             font-family: "SF Mono", "Menlo", monospace;
+            transition: color var(--transition-duration) var(--easing);
         }
 
         .ctrl-char {
-            background: #fff3e0;
+            background: var(--ctrl-char-bg);
             border-radius: 3px;
             padding: 0 4px;
-            color: #b77a3a;
+            color: var(--ctrl-char-text);
             font-size: 13px;
+            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
         }
 
         .highlight-cell {
-            background: #ffecb3 !important;
+            background: var(--highlight-bg) !important;
             border-radius: 4px;
-            box-shadow: 0 0 0 2px #ffb300;
+            box-shadow: 0 0 0 2px var(--highlight-shadow);
+            transition: background var(--transition-duration) var(--easing), box-shadow var(--transition-duration) var(--easing);
         }
 
         /* 复制按钮 */
@@ -552,7 +682,7 @@
             border-radius: 3px;
             background: transparent;
             border: none;
-            color: #5a6a8a;
+            color: var(--text-muted);
         }
         .copy-btn:hover {
             opacity: 1;
@@ -572,10 +702,11 @@
         .footer-info {
             margin-top: 18px;
             text-align: center;
-            color: #aab3c8;
+            color: var(--footer-text);
             font-size: 13px;
-            border-top: 1px solid #edf0f6;
+            border-top: 1px solid var(--footer-border);
             padding-top: 18px;
+            transition: color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
         }
         .footer-info a {
             color: #5fb8ff;
@@ -606,6 +737,111 @@
         }
         #copyToast.show {
             opacity: 1;
+        }
+
+        /* ===== 主题切换按钮 ===== */
+        .theme-toggle-wrapper {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 12px;
+        }
+        .theme-toggle-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px 4px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s, border-color 0.2s;
+            backdrop-filter: blur(4px);
+            font-family: inherit;
+            line-height: 28px;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .theme-toggle-btn .toggle-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+        .theme-toggle-btn .toggle-label {
+            font-size: 12px;
+            opacity: 0.8;
+            white-space: nowrap;
+        }
+        /* 日间模式按钮样式 */
+        [data-theme="light"] .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        [data-theme="light"] .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        /* 夜间模式按钮样式 */
+        [data-theme="dark"] .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        [data-theme="dark"] .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* ===== 过渡动画 ===== */
+        .theme-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .theme-transition-overlay.active {
+            opacity: 1;
+        }
+        .theme-transition-overlay.to-dark {
+            background: radial-gradient(circle at center, transparent 0%, #000000 100%);
+            animation: shrink-to-dark 0.5s ease forwards;
+        }
+        .theme-transition-overlay.to-light {
+            background: radial-gradient(circle at center, #ffffff 0%, transparent 100%);
+            animation: expand-to-light 0.5s ease forwards;
+        }
+
+        @keyframes shrink-to-dark {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+        @keyframes expand-to-light {
+            0% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
         }
 
         @media (max-width: 640px) {
@@ -668,6 +904,15 @@
                 max-width: 100%;
                 width: 100%;
             }
+            .layui-header .sub {
+                display: none;
+            }
+            .theme-toggle-btn .toggle-label {
+                display: none;
+            }
+            .theme-toggle-btn {
+                padding: 4px 8px;
+            }
         }
 
         .table-scroll-x::-webkit-scrollbar,
@@ -677,17 +922,19 @@
         }
         .table-scroll-x::-webkit-scrollbar-track,
         .main_content::-webkit-scrollbar-track {
-            background: #f0f2f7;
+            background: var(--scrollbar-track);
             border-radius: 4px;
+            transition: background var(--transition-duration) var(--easing);
         }
         .table-scroll-x::-webkit-scrollbar-thumb,
         .main_content::-webkit-scrollbar-thumb {
-            background: #d0d7e5;
+            background: var(--scrollbar-thumb);
             border-radius: 4px;
+            transition: background var(--transition-duration) var(--easing);
         }
         .table-scroll-x::-webkit-scrollbar-thumb:hover,
         .main_content::-webkit-scrollbar-thumb:hover {
-            background: #b8c2d4;
+            background: var(--scrollbar-thumb-hover);
         }
     </style>
 </head>
@@ -698,7 +945,15 @@
         <!-- 顶部导航 -->
         <header class="layui-header">
             <div class="logo">📋 <span>Unicode</span> 全平面查看器</div>
-            <div class="sub" id="planeSub">BMP · U+0000 – U+FFFF</div>
+            <div class="header-right" style="display:flex;align-items:center;gap:8px;">
+                <div class="theme-toggle-wrapper">
+                    <button class="theme-toggle-btn" id="themeToggle" title="切换主题">
+                        <span class="toggle-icon" id="themeIcon">🌙</span>
+                        <span class="toggle-label" id="themeLabel">跟随系统</span>
+                    </button>
+                </div>
+                <div class="sub" id="planeSub">BMP · U+0000 – U+FFFF</div>
+            </div>
         </header>
 
         <!-- 主内容 -->
@@ -802,12 +1057,144 @@
         </div>
     </div>
 
+    <!-- 过渡遮罩 -->
+    <div class="theme-transition-overlay" id="themeTransition"></div>
+
     <!-- 复制成功提示 -->
     <div id="copyToast">✅ 已复制到剪贴板</div>
 
     <script>
         (function() {
             'use strict';
+
+            // ============================================================
+            // 1. 主题切换模块（从参考网站移植并增强）
+            // ============================================================
+
+            const STORAGE_KEY = 'unicode_viewer_theme';
+            const THEMES = ['system', 'light', 'dark'];
+            const THEME_ICONS = {
+                system: '🔄',
+                light: '☀️',
+                dark: '🌙'
+            };
+            const THEME_LABELS = {
+                system: '跟随系统',
+                light: '日间',
+                dark: '夜间'
+            };
+
+            // DOM 元素
+            const htmlEl = document.documentElement;
+            const themeBtn = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            const transitionOverlay = document.getElementById('themeTransition');
+
+            // 获取系统主题
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            // 获取当前有效主题（实际应用的主题）
+            function getEffectiveTheme(mode) {
+                if (mode === 'system') {
+                    return getSystemTheme();
+                }
+                return mode;
+            }
+
+            // 应用主题
+            function applyTheme(mode, animate = true) {
+                const effective = getEffectiveTheme(mode);
+
+                // 更新 data-theme
+                const oldTheme = htmlEl.getAttribute('data-theme') || 'light';
+                const newTheme = effective;
+
+                if (oldTheme !== newTheme && animate) {
+                    // 执行过渡动画
+                    const overlay = transitionOverlay;
+                    overlay.classList.remove('active', 'to-dark', 'to-light');
+
+                    // 强制重排
+                    void overlay.offsetWidth;
+
+                    if (newTheme === 'dark') {
+                        overlay.classList.add('to-dark');
+                    } else {
+                        overlay.classList.add('to-light');
+                    }
+                    overlay.classList.add('active');
+
+                    // 动画结束后移除遮罩
+                    setTimeout(() => {
+                        overlay.classList.remove('active', 'to-dark', 'to-light');
+                    }, 550);
+                }
+
+                // 应用主题
+                htmlEl.setAttribute('data-theme', effective);
+
+                // 更新按钮状态
+                updateButtonState(mode);
+
+                // 保存到 localStorage
+                localStorage.setItem(STORAGE_KEY, mode);
+            }
+
+            // 更新按钮显示
+            function updateButtonState(mode) {
+                themeIcon.textContent = THEME_ICONS[mode] || '🔄';
+                themeLabel.textContent = THEME_LABELS[mode] || '跟随系统';
+            }
+
+            // 获取当前模式
+            function getCurrentMode() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved && THEMES.includes(saved)) {
+                    return saved;
+                }
+                return 'system';
+            }
+
+            // 循环切换
+            function cycleTheme() {
+                const current = getCurrentMode();
+                const idx = THEMES.indexOf(current);
+                const next = THEMES[(idx + 1) % THEMES.length];
+                applyTheme(next, true);
+            }
+
+            // 监听系统主题变化
+            let systemThemeListener = null;
+
+            function startSystemThemeListener() {
+                if (systemThemeListener) return;
+                const media = window.matchMedia('(prefers-color-scheme: dark)');
+                systemThemeListener = function(e) {
+                    const mode = getCurrentMode();
+                    if (mode === 'system') {
+                        // 如果当前是跟随系统模式，自动更新
+                        applyTheme('system', false);
+                    }
+                };
+                media.addEventListener('change', systemThemeListener);
+            }
+
+            // 初始化主题
+            function initTheme() {
+                const mode = getCurrentMode();
+                applyTheme(mode, false);
+                startSystemThemeListener();
+
+                // 按钮点击事件
+                themeBtn.addEventListener('click', cycleTheme);
+            }
+
+            // ============================================================
+            // 2. 原有 Unicode 查看器代码（保持完全不变）
+            // ============================================================
 
             // ---------- 所有 17 个 Unicode 平面配置 ----------
             const PLANES = {
@@ -834,15 +1221,18 @@
             function getSortedPlaneKeys() {
                 return Object.keys(PLANES).sort((a, b) => parseInt(a) - parseInt(b));
             }
+
             function getPlaneStartsSorted() {
                 return getSortedPlaneKeys().map(key => parseInt(key));
             }
+
             function getPrevPlaneStart(currentStart) {
                 const starts = getPlaneStartsSorted();
                 const idx = starts.indexOf(currentStart);
                 if (idx > 0) return starts[idx - 1];
                 return null;
             }
+
             function getNextPlaneStart(currentStart) {
                 const starts = getPlaneStartsSorted();
                 const idx = starts.indexOf(currentStart);
@@ -914,31 +1304,29 @@
 
             // ---------- 彩蛋 ----------
             easterEgg.addEventListener('click', function() {
-                // 播放音频
                 try {
                     const audio = new Audio('咕咕嘎嘎.mp3');
                     audio.play();
                 } catch (e) {
                     console.warn('音频播放失败:', e);
                 }
-                // 弹窗
                 alert('🐧咕咕嘎嘎🐧');
             });
 
             // ---------- 历史记录管理 ----------
-            const STORAGE_KEY = 'unicode_viewer_history';
+            const HISTORY_STORAGE_KEY = 'unicode_viewer_history';
             const MAX_HISTORY = 20;
 
             function getHistory() {
                 try {
-                    const data = localStorage.getItem(STORAGE_KEY);
+                    const data = localStorage.getItem(HISTORY_STORAGE_KEY);
                     return data ? JSON.parse(data) : [];
                 } catch { return []; }
             }
 
             function saveHistory(history) {
                 try {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
                 } catch {}
             }
 
@@ -1031,12 +1419,10 @@
                 }
                 const val = searchInput.value.trim();
                 if (val.length === 0) {
-                    // 显示历史
                     historyPanel.classList.add('active');
                     candidatePanel.classList.remove('active');
                     renderHistory();
                 } else {
-                    // 显示候选
                     historyPanel.classList.remove('active');
                     candidatePanel.classList.add('active');
                     renderCandidates(val);
@@ -1045,12 +1431,11 @@
 
             // ---------- 候选生成 ----------
             function renderCandidates(keyword) {
-                const mode = searchMode.value; // 'page', 'plane', 'all'
+                const mode = searchMode.value;
                 const hexEnabled = searchOpts.hex;
                 const decEnabled = searchOpts.decimal;
                 const charEnabled = searchOpts.char;
 
-                // 获取搜索范围数据
                 let dataToSearch = [];
                 if (mode === 'page') {
                     const startIdx = (currentPage - 1) * PAGE_SIZE;
@@ -1058,8 +1443,7 @@
                     dataToSearch = currentData.slice(startIdx, endIdx);
                 } else if (mode === 'plane') {
                     dataToSearch = currentData;
-                } else { // 'all'
-                    // 收集所有已加载平面的数据（只遍历已生成缓存的平面，未生成的动态生成）
+                } else {
                     for (const key of Object.keys(PLANES)) {
                         const start = parseInt(key);
                         const data = generatePlaneData(start);
@@ -1069,7 +1453,6 @@
 
                 const results = {};
 
-                // 十六进制区
                 if (hexEnabled) {
                     const hexList = [];
                     const lowerKw = keyword.toLowerCase();
@@ -1080,10 +1463,9 @@
                         }
                     }
                     results.hex = { items: hexList, total: hexList.length === 10 ? 10 : hexList.length, more: hexList
-                        .length === 10 };
+                            .length === 10 };
                 }
 
-                // 十进制区
                 if (decEnabled) {
                     const decList = [];
                     for (const item of dataToSearch) {
@@ -1093,10 +1475,9 @@
                         }
                     }
                     results.dec = { items: decList, total: decList.length === 10 ? 10 : decList.length, more: decList
-                        .length === 10 };
+                            .length === 10 };
                 }
 
-                // 字符区
                 if (charEnabled) {
                     const charList = [];
                     const lowerKw = keyword.toLowerCase();
@@ -1108,10 +1489,9 @@
                         }
                     }
                     results.char = { items: charList, total: charList.length === 10 ? 10 : charList.length, more: charList
-                        .length === 10 };
+                            .length === 10 };
                 }
 
-                // 渲染
                 let html = '';
                 const sectionOrder = ['hex', 'dec', 'char'];
                 const sectionLabels = {
@@ -1144,7 +1524,6 @@
                 }
                 candidatePanel.innerHTML = html;
 
-                // 绑定点击事件
                 candidatePanel.querySelectorAll('.candidate-item').forEach(el => {
                     el.addEventListener('mousedown', function(e) {
                         e.preventDefault();
@@ -1387,15 +1766,13 @@
                 if (!opt) return;
                 btn.classList.toggle('active');
                 searchOpts[opt] = btn.classList.contains('active');
-                // 如果输入框有焦点且有内容，刷新候选
                 if (document.activeElement === searchInput && searchInput.value.trim()) {
                     renderCandidates(searchInput.value.trim());
                 }
             });
 
-            // ---------- 核心搜索函数 (改进：优先精确匹配) ----------
+            // ---------- 核心搜索函数 ----------
             function searchAndLocate(keyword) {
-                // 支持传入数字码位
                 let kw = keyword;
                 if (typeof keyword === 'number') {
                     kw = keyword.toString(16).toUpperCase();
@@ -1408,7 +1785,6 @@
                     return;
                 }
 
-                // 保存到历史
                 addHistory(trimmed);
 
                 const hexEnabled = searchOpts.hex;
@@ -1420,9 +1796,8 @@
                     return;
                 }
 
-                const mode = searchMode.value; // 'page', 'plane', 'all'
+                const mode = searchMode.value;
 
-                // ----- 先尝试数字解析 -----
                 let targetCode = -1;
                 if (hexEnabled) {
                     let hexStr = trimmed;
@@ -1449,7 +1824,6 @@
                     }
                 }
 
-                // 如果数字解析到了有效码位
                 if (targetCode !== -1) {
                     let allowJump = false;
                     if (mode === 'all') {
@@ -1500,22 +1874,18 @@
                     }
                 }
 
-                // ----- 字符匹配（改进：优先精确匹配） -----
                 if (!charEnabled) {
                     alert('未找到匹配的码位，请检查输入或启用"字符"搜索进行模糊匹配。');
                     return;
                 }
 
-                // 辅助函数：在数据数组 data 中搜索，优先精确匹配，再忽略大小写
                 function findInData(data, kw) {
-                    // 第一次遍历：精确匹配（区分大小写）
                     for (let i = 0; i < data.length; i++) {
                         const item = data[i];
                         if (item.char === kw || (item.display !== item.char && item.display === kw)) {
                             return item;
                         }
                     }
-                    // 第二次遍历：忽略大小写匹配
                     const lowerKw = kw.toLowerCase();
                     for (let i = 0; i < data.length; i++) {
                         const item = data[i];
@@ -1549,7 +1919,7 @@
                         return;
                     }
                     alert('当前平面未找到匹配字符');
-                } else { // 'all'
+                } else {
                     for (const key of Object.keys(PLANES)) {
                         const start = parseInt(key);
                         const data = generatePlaneData(start);
@@ -1569,7 +1939,7 @@
                 }
             }
 
-            // ---------- 分页导航（包括跨平面） ----------
+            // ---------- 分页导航 ----------
             function goToPage(page) {
                 if (page < 1) page = 1;
                 if (page > TOTAL_PAGES) page = TOTAL_PAGES;
@@ -1651,7 +2021,6 @@
                 }
             });
 
-            // 清除按钮：清空后保持焦点并显示历史面板
             clearSearchBtn.addEventListener('click', function() {
                 searchInput.value = '';
                 updateClearBtn();
@@ -1666,12 +2035,10 @@
                 updatePanels();
             });
 
-            // 焦点控制
             searchInput.addEventListener('focus', function() {
                 updatePanels();
             });
 
-            // 修正 blur 事件：如果焦点回到输入框，不关闭面板
             searchInput.addEventListener('blur', function() {
                 setTimeout(() => {
                     if (document.activeElement === searchInput) {
@@ -1682,7 +2049,6 @@
                 }, 150);
             });
 
-            // 点击外部关闭面板
             document.addEventListener('click', function(e) {
                 if (!searchWrapper.contains(e.target)) {
                     historyPanel.classList.remove('active');
@@ -1742,7 +2108,7 @@
                     `;
             document.head.appendChild(styleExtra);
 
-            // ---------- 动态生成下拉选项（所有17个平面） ----------
+            // ---------- 动态生成下拉选项 ----------
             function populatePlaneSelect() {
                 planeSelect.innerHTML = '';
                 const sortedKeys = getSortedPlaneKeys();
@@ -1755,12 +2121,19 @@
                 });
             }
 
-            // ---------- 初始化 ----------
+            // ============================================================
+            // 3. 初始化
+            // ============================================================
+
+            // 先初始化主题（确保页面加载时主题正确）
+            initTheme();
+
+            // 再初始化 Unicode 查看器
             populatePlaneSelect();
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 全部17个Unicode平面已加载，智能候选搜索已启用，彩蛋已添加。');
+            console.log('✅ 全部17个Unicode平面已加载，智能候选搜索已启用，彩蛋已添加，主题切换已集成。');
         })();
     </script>
 
