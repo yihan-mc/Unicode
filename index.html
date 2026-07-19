@@ -19,10 +19,9 @@
         }
 
         /* ================================================================
-                   主题变量 (参考网站配色)
+                   主题变量
                    ================================================================ */
         :root {
-            /* 日间 (默认) */
             --bg-primary: #f5f6fa;
             --bg-secondary: #ffffff;
             --bg-toolbar: #f8f9fc;
@@ -73,7 +72,6 @@
             --toggle-icon-color: #ffffff;
         }
 
-        /* ===== 夜间模式 ===== */
         [data-theme="dark"] {
             --bg-primary: #1a1a1e;
             --bg-secondary: #2a2a2e;
@@ -123,7 +121,49 @@
         }
 
         /* ================================================================
-                   布局
+                   View Transitions 主题切换动画（基于类名控制，兼容可靠）
+                   ================================================================ */
+        html {
+            view-transition-name: root;
+        }
+
+        /* 扩张效果（暗 → 亮）：新视图从按钮中心向外扩散 */
+        html.to-light::view-transition-new(root) {
+            animation: expandFromCenter 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        html.to-light::view-transition-old(root) {
+            animation: none;
+            opacity: 0;
+        }
+
+        /* 收缩效果（亮 → 暗）：旧视图从全屏向按钮中心收缩 */
+        html.to-dark::view-transition-old(root) {
+            animation: shrinkToCenter 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        html.to-dark::view-transition-new(root) {
+            animation: none;
+        }
+
+        @keyframes expandFromCenter {
+            from {
+                clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+            }
+            to {
+                clip-path: circle(150% at 50% 50%);
+            }
+        }
+
+        @keyframes shrinkToCenter {
+            from {
+                clip-path: circle(150% at 50% 50%);
+            }
+            to {
+                clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+            }
+        }
+
+        /* ================================================================
+                   布局及组件样式（与原始版本一致，未做改动）
                    ================================================================ */
         .layui-layout-admin {
             display: flex;
@@ -188,15 +228,13 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* ================================================================
-                   主题切换按钮 (与参考网站完全一致)
-                   ================================================================ */
+        /* 主题切换按钮 */
         .vp-color-mode-switch {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 1px solid var(--toggle-border);
             background: var(--toggle-bg);
@@ -206,24 +244,41 @@
             padding: 0;
             outline: none;
             flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
         }
         .vp-color-mode-switch:hover {
             background: var(--toggle-hover-bg);
             border-color: var(--toggle-hover-border);
             transform: scale(1.05);
         }
+        .vp-color-mode-switch .icon-wrapper {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .vp-color-mode-switch .icon {
-            width: 20px;
-            height: 20px;
+            position: absolute;
+            width: 22px;
+            height: 22px;
             display: block;
             fill: currentColor;
             flex-shrink: 0;
+            opacity: 0;
+            transform: scale(0.4) rotate(-35deg);
+            transition: opacity 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity;
         }
-        .vp-color-mode-switch .icon.hidden {
-            display: none !important;
+        .vp-color-mode-switch .icon.active {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
         }
 
-        /* ===== 工具栏 ===== */
+        /* 工具栏 */
         .toolbar {
             background: var(--bg-toolbar);
             padding: 10px 16px;
@@ -311,7 +366,6 @@
                 color var(--transition-duration) var(--easing);
         }
 
-        /* ---- 搜索选项按钮组 ---- */
         .search-options {
             display: flex;
             gap: 4px;
@@ -345,7 +399,6 @@
             border-color: #3d9ee0;
         }
 
-        /* ---- 搜索输入框 + 清除按钮 ---- */
         .search-wrapper {
             position: relative;
             display: inline-flex;
@@ -387,7 +440,6 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* ---- 搜索面板 ---- */
         .search-panel {
             position: absolute;
             top: calc(100% + 4px);
@@ -480,7 +532,6 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* 候选区 */
         .candidate-section {
             padding: 4px 0;
             border-bottom: 1px solid var(--border-color);
@@ -535,7 +586,6 @@
             transition: color var(--transition-duration) var(--easing);
         }
 
-        /* ===== 分页控件 ===== */
         .pagination {
             display: flex;
             align-items: center;
@@ -600,7 +650,6 @@
             background: var(--badge-bg);
         }
 
-        /* ===== 表格 ===== */
         #resultContainer {
             border-radius: 10px;
             border: 1px solid var(--border-color);
@@ -770,7 +819,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
         }
 
-        /* ===== 底部 ===== */
         .footer-info {
             margin-top: 18px;
             text-align: center;
@@ -812,64 +860,6 @@
             opacity: 1;
         }
 
-        /* ================================================================
-                   过渡动画遮罩
-                   ================================================================ */
-        .theme-transition-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .theme-transition-overlay.active {
-            opacity: 1;
-        }
-        .theme-transition-overlay.to-dark {
-            background: radial-gradient(circle at center, transparent 0%, #000000 100%);
-            animation: shrink-to-dark 0.5s ease forwards;
-        }
-        .theme-transition-overlay.to-light {
-            background: radial-gradient(circle at center, #ffffff 0%, transparent 100%);
-            animation: expand-to-light 0.5s ease forwards;
-        }
-
-        @keyframes shrink-to-dark {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            30% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-        }
-        @keyframes expand-to-light {
-            0% {
-                opacity: 0;
-                transform: scale(1.2);
-            }
-            30% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-        }
-
-        /* ================================================================
-                   响应式
-                   ================================================================ */
         @media (max-width: 640px) {
             .main_content {
                 padding: 12px;
@@ -934,16 +924,19 @@
                 display: none;
             }
             .vp-color-mode-switch {
-                width: 30px;
-                height: 30px;
+                width: 34px;
+                height: 34px;
+            }
+            .vp-color-mode-switch .icon-wrapper {
+                width: 18px;
+                height: 18px;
             }
             .vp-color-mode-switch .icon {
-                width: 17px;
-                height: 17px;
+                width: 18px;
+                height: 18px;
             }
         }
 
-        /* ===== 滚动条 ===== */
         .table-scroll-x::-webkit-scrollbar,
         .main_content::-webkit-scrollbar {
             width: 8px;
@@ -975,17 +968,19 @@
         <header class="layui-header">
             <div class="logo">📋 <span>Unicode</span> 全平面查看器</div>
             <div class="header-right">
-                <!-- 主题切换按钮 (与参考网站完全一致) -->
+                <!-- 主题切换按钮 -->
                 <button type="button" class="vp-color-mode-switch" id="colorModeSwitch" title="切换主题">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon auto-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="auto icon" name="auto">
-                        <path d="M512 992C246.92 992 32 777.08 32 512S246.92 32 512 32s480 214.92 480 480-214.92 480-480 480zm0-840c-198.78 0-360 161.22-360 360 0 198.84 161.22 360 360 360s360-161.16 360-360c0-198.78-161.22-360-360-360zm0 660V212c165.72 0 300 134.34 300 300 0 165.72-134.28 300-300 300z"></path>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dark-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="dark icon" name="dark">
-                        <path d="M524.8 938.667h-4.267a439.893 439.893 0 0 1-313.173-134.4 446.293 446.293 0 0 1-11.093-597.334A432.213 432.213 0 0 1 366.933 90.027a42.667 42.667 0 0 1 45.227 9.386 42.667 42.667 0 0 1 10.24 42.667 358.4 358.4 0 0 0 82.773 375.893 361.387 361.387 0 0 0 376.747 82.774 42.667 42.667 0 0 1 54.187 55.04 433.493 433.493 0 0 1-99.84 154.88 438.613 438.613 0 0 1-311.467 128z"></path>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon light-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="light icon" name="light">
-                        <path d="M952 552h-80a40 40 0 0 1 0-80h80a40 40 0 0 1 0 80zM801.88 280.08a41 41 0 0 1-57.96-57.96l57.96-58a41.04 41.04 0 0 1 58 58l-58 57.96zM512 752a240 240 0 1 1 0-480 240 240 0 0 1 0 480zm0-560a40 40 0 0 1-40-40V72a40 40 0 0 1 80 0v80a40 40 0 0 1-40 40zm-289.88 88.08-58-57.96a41.04 41.04 0 0 1 58-58l57.96 58a41 41 0 0 1-57.96 57.96zM192 512a40 40 0 0 1-40 40H72a40 40 0 0 1 0-80h80a40 40 0 0 1 40 40zm30.12 231.92a41 41 0 0 1 57.96 57.96l-57.96 58a41.04 41.04 0 0 1-58-58l58-57.96zM512 832a40 40 0 0 1 40 40v80a40 40 0 0 1-80 0v-80a40 40 0 0 1 40-40zm289.88-88.08 58 57.96a41.04 41.04 0 0 1-58 58l-57.96-58a41 41 0 0 1 57.96-57.96z"></path>
-                    </svg>
+                    <span class="icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon auto-icon active" viewBox="0 0 1024 1024" fill="currentColor">
+                            <path d="M512 992C246.92 992 32 777.08 32 512S246.92 32 512 32s480 214.92 480 480-214.92 480-480 480zm0-840c-198.78 0-360 161.22-360 360 0 198.84 161.22 360 360 360s360-161.16 360-360c0-198.78-161.22-360-360-360zm0 660V212c165.72 0 300 134.34 300 300 0 165.72-134.28 300-300 300z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon dark-icon" viewBox="0 0 1024 1024" fill="currentColor">
+                            <path d="M524.8 938.667h-4.267a439.893 439.893 0 0 1-313.173-134.4 446.293 446.293 0 0 1-11.093-597.334A432.213 432.213 0 0 1 366.933 90.027a42.667 42.667 0 0 1 45.227 9.386 42.667 42.667 0 0 1 10.24 42.667 358.4 358.4 0 0 0 82.773 375.893 361.387 361.387 0 0 0 376.747 82.774 42.667 42.667 0 0 1 54.187 55.04 433.493 433.493 0 0 1-99.84 154.88 438.613 438.613 0 0 1-311.467 128z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon light-icon" viewBox="0 0 1024 1024" fill="currentColor">
+                            <path d="M952 552h-80a40 40 0 0 1 0-80h80a40 40 0 0 1 0 80zM801.88 280.08a41 41 0 0 1-57.96-57.96l57.96-58a41.04 41.04 0 0 1 58 58l-58 57.96zM512 752a240 240 0 1 1 0-480 240 240 0 0 1 0 480zm0-560a40 40 0 0 1-40-40V72a40 40 0 0 1 80 0v80a40 40 0 0 1-40 40zm-289.88 88.08-58-57.96a41.04 41.04 0 0 1 58-58l57.96 58a41 41 0 0 1-57.96 57.96zM192 512a40 40 0 0 1-40 40H72a40 40 0 0 1 0-80h80a40 40 0 0 1 40 40zm30.12 231.92a41 41 0 0 1 57.96 57.96l-57.96 58a41.04 41.04 0 0 1-58-58l58-57.96zM512 832a40 40 0 0 1 40 40v80a40 40 0 0 1-80 0v-80a40 40 0 0 1 40-40zm289.88-88.08 58 57.96a41.04 41.04 0 0 1-58 58l-57.96-58a41 41 0 0 1 57.96-57.96z"/>
+                        </svg>
+                    </span>
                 </button>
                 <div class="sub" id="planeSub">BMP · U+0000 – U+FFFF</div>
             </div>
@@ -1073,9 +1068,6 @@
         </div>
     </div>
 
-    <!-- 过渡遮罩 -->
-    <div class="theme-transition-overlay" id="themeTransition"></div>
-
     <!-- 复制提示 -->
     <div id="copyToast">✅ 已复制到剪贴板</div>
 
@@ -1084,23 +1076,14 @@
             'use strict';
 
             // ================================================================
-            // 1. 主题切换模块 (与参考网站完全一致)
+            // 1. 主题切换模块（类名控制，精准收缩）
             // ================================================================
 
             const THEME_KEY = 'unicode_viewer_theme';
             const MODES = ['system', 'light', 'dark'];
-            const MODE_ICONS = {
-                system: 'auto-icon',
-                light: 'light-icon',
-                dark: 'dark-icon'
-            };
 
             const htmlEl = document.documentElement;
             const switchBtn = document.getElementById('colorModeSwitch');
-            const overlay = document.getElementById('themeTransition');
-            const autoIcon = switchBtn.querySelector('.auto-icon');
-            const darkIcon = switchBtn.querySelector('.dark-icon');
-            const lightIcon = switchBtn.querySelector('.light-icon');
 
             function getSystemTheme() {
                 return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -1111,39 +1094,58 @@
             }
 
             function setActiveIcon(mode) {
-                [autoIcon, darkIcon, lightIcon].forEach(el => el.classList.add('hidden'));
-                const active = switchBtn.querySelector('.' + MODE_ICONS[mode]);
-                if (active) active.classList.remove('hidden');
+                const autoIcon = switchBtn.querySelector('.auto-icon');
+                const darkIcon = switchBtn.querySelector('.dark-icon');
+                const lightIcon = switchBtn.querySelector('.light-icon');
+                [autoIcon, darkIcon, lightIcon].forEach(el => el.classList.remove('active'));
+                let target = null;
+                if (mode === 'system') target = autoIcon;
+                else if (mode === 'dark') target = darkIcon;
+                else if (mode === 'light') target = lightIcon;
+                if (target) {
+                    requestAnimationFrame(() => {
+                        target.classList.add('active');
+                    });
+                }
             }
 
-            function applyTheme(mode, animate) {
+            function applyTheme(mode, animate = false) {
                 const effective = getEffectiveTheme(mode);
-                // 获取当前实际主题（用于动画判断）
                 const oldEffective = htmlEl.getAttribute('data-theme') || 'light';
 
-                // 如果实际主题没有变化，但模式变了，我们仍需更新图标和存储
-                // 但动画只在视觉主题变化时触发
-                const visualChanged = (oldEffective !== effective);
-
-                if (animate && visualChanged) {
-                    const overlayEl = overlay;
-                    overlayEl.classList.remove('active', 'to-dark', 'to-light');
-                    void overlayEl.offsetWidth;
-                    if (effective === 'dark') {
-                        overlayEl.classList.add('to-dark');
-                    } else {
-                        overlayEl.classList.add('to-light');
-                    }
-                    overlayEl.classList.add('active');
-                    setTimeout(() => {
-                        overlayEl.classList.remove('active', 'to-dark', 'to-light');
-                    }, 550);
-                }
-
-                // 关键修复：将 data-theme 设置为实际生效的主题 (dark/light)，而不是 'system'
-                htmlEl.setAttribute('data-theme', effective);
                 setActiveIcon(mode);
-                localStorage.setItem(THEME_KEY, mode);
+
+                const shouldAnimate = animate && document.startViewTransition && (oldEffective !== effective);
+
+                if (shouldAnimate) {
+                    // 根据目标主题确定方向类
+                    const directionClass = effective === 'light' ? 'to-light' : 'to-dark';
+
+                    // 获取按钮中心坐标
+                    const rect = switchBtn.getBoundingClientRect();
+                    const cx = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+                    const cy = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+                    htmlEl.style.setProperty('--x', cx + '%');
+                    htmlEl.style.setProperty('--y', cy + '%');
+
+                    // ★ 关键：在 startViewTransition 之前添加类，确保旧视图捕获到该类
+                    htmlEl.classList.add(directionClass);
+
+                    // 启动过渡
+                    const transition = document.startViewTransition(() => {
+                        htmlEl.setAttribute('data-theme', effective);
+                        localStorage.setItem(THEME_KEY, mode);
+                    });
+
+                    // 过渡完成后移除类
+                    transition.finally(() => {
+                        htmlEl.classList.remove('to-light', 'to-dark');
+                    });
+                } else {
+                    // 无动画直接切换
+                    htmlEl.setAttribute('data-theme', effective);
+                    localStorage.setItem(THEME_KEY, mode);
+                }
             }
 
             function getCurrentMode() {
@@ -1159,7 +1161,6 @@
                 applyTheme(next, true);
             }
 
-            // 监听系统主题变化
             let mediaListener = null;
 
             function startSystemListener() {
@@ -1182,7 +1183,7 @@
             }
 
             // ================================================================
-            // 2. Unicode 查看器 (原封不动保留)
+            // 2. Unicode 查看器（全部保留）
             // ================================================================
 
             const PLANES = {
@@ -1286,7 +1287,6 @@
 
             totalPagesDisplay.textContent = TOTAL_PAGES;
 
-            // 彩蛋
             easterEgg.addEventListener('click', function() {
                 try {
                     const audio = new Audio('咕咕嘎嘎.mp3');
@@ -1295,7 +1295,6 @@
                 alert('🐧咕咕嘎嘎🐧');
             });
 
-            // 历史记录
             const HISTORY_STORAGE_KEY = 'unicode_viewer_history';
             const MAX_HISTORY = 20;
 
@@ -1663,7 +1662,6 @@
                 updateNavButtons();
             }
 
-            // 复制
             tbody.addEventListener('click', function(e) {
                 const btn = e.target.closest('.copy-btn');
                 if (!btn) return;
@@ -1727,7 +1725,6 @@
                 }, 2000);
             }
 
-            // 搜索选项
             searchOptionsContainer.addEventListener('click', function(e) {
                 const btn = e.target.closest('.opt-btn');
                 if (!btn) return;
@@ -1740,7 +1737,6 @@
                 }
             });
 
-            // 核心搜索
             function searchAndLocate(keyword) {
                 let kw = keyword;
                 if (typeof keyword === 'number') {
@@ -1917,7 +1913,6 @@
                 renderPage(page);
             }
 
-            // ---- 事件绑定 ----
             planeSelect.addEventListener('change', function() {
                 const val = this.value;
                 const start = parseInt(val);
@@ -2096,7 +2091,7 @@
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 全部17个Unicode平面已加载 · 主题切换已修复（跟随系统正确生效）');
+            console.log('✅ 主题切换动画已修正：日间→夜间为黑色收缩效果');
         })();
     </script>
 
