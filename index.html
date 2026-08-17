@@ -625,6 +625,11 @@
         .pagination .btn:disabled:hover {
             background: var(--badge-bg);
         }
+        /* 跳转标签颜色适配主题 */
+        .jump-label {
+            color: var(--text-secondary);
+            transition: color 0.5s ease;
+        }
 
         /* ===== 表格 ===== */
         #resultContainer {
@@ -1006,7 +1011,7 @@
                 <button class="btn" id="prevPage" title="上一页">◀ 上一页</button>
                 <span class="info">第 <strong id="currentPageDisplay">1</strong> / <span id="totalPagesDisplay">256</span> 页</span>
                 <button class="btn" id="nextPage" title="下一页">下一页 ▶</button>
-                <span style="margin-left:8px;">跳转</span>
+                <span class="jump-label" style="margin-left:8px;">跳转</span>
                 <input type="number" id="pageJump" min="1" max="256" value="1">
                 <button class="btn btn-primary" id="jumpBtn">GO</button>
                 <button class="btn" id="firstPageBtn">首页</button>
@@ -1902,6 +1907,11 @@
                 }
             });
 
+            // 失焦时恢复当前页码（不触发跳转）
+            pageJump.addEventListener('blur', function() {
+                this.value = currentPage;
+            });
+
             document.getElementById('firstPageBtn').addEventListener('click', function() {
                 goToPage(1);
             });
@@ -1993,22 +2003,16 @@
             mainContent.addEventListener('scroll', updateShadow);
             tableScroll.addEventListener('scroll', updateShadow);
 
-            // ================================================================
             // 行高亮交互：点击已高亮行则取消高亮，否则高亮该行
-            // ================================================================
             tbody.addEventListener('click', function(e) {
-                // 如果点击的是复制按钮，不处理行高亮
                 if (e.target.closest('.copy-btn')) return;
                 const td = e.target.closest('td');
                 if (!td) return;
                 const tr = td.closest('tr');
                 if (!tr) return;
-
-                // 如果当前行已经高亮，则取消高亮
                 if (tr.classList.contains('highlight-row')) {
                     tr.classList.remove('highlight-row');
                 } else {
-                    // 否则先清除所有高亮，再高亮当前行
                     document.querySelectorAll('#resultBody tr.highlight-row')
                         .forEach(r => r.classList.remove('highlight-row'));
                     tr.classList.add('highlight-row');
@@ -2035,7 +2039,7 @@
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 全部功能已加载，主题切换动画已优化，行高亮支持点击取消');
+            console.log('✅ 全部功能已加载，主题切换动画已优化，跳转标签颜色已修复，输入框失焦复位');
         })();
     </script>
 
