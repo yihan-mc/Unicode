@@ -625,7 +625,6 @@
         .pagination .btn:disabled:hover {
             background: var(--badge-bg);
         }
-        /* 跳转标签颜色适配主题 */
         .jump-label {
             color: var(--text-secondary);
             transition: color 0.5s ease;
@@ -1048,7 +1047,7 @@
             'use strict';
 
             // ================================================================
-            // 1. 主题切换模块（平滑过渡 + 按钮旋转，无 View Transition）
+            // 1. 主题切换模块（平滑过渡 + 按钮旋转）
             // ================================================================
 
             const THEME_KEY = 'unicode_viewer_theme';
@@ -1232,6 +1231,7 @@
             const nextPageBtn = document.getElementById('nextPage');
             const candidatePanel = document.getElementById('candidatePanel');
             const easterEgg = document.getElementById('easterEgg');
+            const jumpBtn = document.getElementById('jumpBtn');
 
             totalPagesDisplay.textContent = TOTAL_PAGES;
 
@@ -1895,21 +1895,48 @@
                 }
             });
 
-            document.getElementById('jumpBtn').addEventListener('click', function() {
+            // ===== 跳转按钮修复：防止失焦重置干扰点击 =====
+            let isJumpBtnClicked = false;
+
+            jumpBtn.addEventListener('mousedown', function() {
+                isJumpBtnClicked = true;
+            });
+            jumpBtn.addEventListener('mouseup', function() {
+                isJumpBtnClicked = false;
+            });
+            // 如果鼠标移出按钮，也重置标记
+            jumpBtn.addEventListener('mouseleave', function() {
+                isJumpBtnClicked = false;
+            });
+
+            jumpBtn.addEventListener('click', function() {
                 let p = parseInt(pageJump.value);
                 if (isNaN(p) || p < 1) p = 1;
                 if (p > TOTAL_PAGES) p = TOTAL_PAGES;
                 goToPage(p);
             });
-            pageJump.addEventListener('keyup', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('jumpBtn').click();
+
+            // 输入框失焦时，若未点击按钮，则恢复当前页码
+            pageJump.addEventListener('blur', function() {
+                if (!isJumpBtnClicked) {
+                    this.value = currentPage;
                 }
             });
 
-            // 失焦时恢复当前页码（不触发跳转）
-            pageJump.addEventListener('blur', function() {
-                this.value = currentPage;
+            pageJump.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    // 回车触发跳转，但不会导致失焦重置干扰，因为点击事件会先触发？
+                    // 但回车不会触发 mousedown，所以 isJumpBtnClicked 为 false，但回车后输入框会失焦，
+                    // 可能触发 blur 重置，所以需要特殊处理：在回车时先记录将要跳转，或者延迟 blur 重置。
+                    // 解决方案：在 keyup 中直接调用跳转，并阻止 blur 重置（通过设置标记）
+                    const p = parseInt(this.value);
+                    if (!isNaN(p) && p >= 1 && p <= TOTAL_PAGES) {
+                        isJumpBtnClicked = true; // 防止 blur 重置
+                        goToPage(p);
+                        // 延迟重置标记
+                        setTimeout(() => { isJumpBtnClicked = false; }, 100);
+                    }
+                }
             });
 
             document.getElementById('firstPageBtn').addEventListener('click', function() {
@@ -2039,7 +2066,7 @@
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 全部功能已加载，主题切换动画已优化，跳转标签颜色已修复，输入框失焦复位');
+            console.log('✅ 全部功能已加载，GO按钮点击跳转修复，失焦复位保留');
         })();
     </script>
 
