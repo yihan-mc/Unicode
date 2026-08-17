@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>全 Unicode 平面查看器</title>
     <style>
-        /* ===== 基础重置 ===== */
+        /* ===== 基础重置 & 变量 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -15,12 +15,8 @@
             height: 100%;
             font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
             background: var(--bg-primary);
-            transition: background 0.5s ease;
+            transition: background 0.5s ease, color 0.5s ease;
         }
-
-        /* ================================================================
-                   主题变量
-                   ================================================================ */
         :root {
             --bg-primary: #f5f6fa;
             --bg-secondary: #ffffff;
@@ -70,8 +66,9 @@
             --toggle-hover-bg: rgba(255, 255, 255, 0.2);
             --toggle-hover-border: rgba(255, 255, 255, 0.35);
             --toggle-icon-color: #ffffff;
+            --row-highlight-bg: #e8f4ff;
+            --row-highlight-first-bg: #d4e6ff;
         }
-
         [data-theme="dark"] {
             --bg-primary: #1a1a1e;
             --bg-secondary: #2a2a2e;
@@ -118,117 +115,33 @@
             --toggle-hover-bg: rgba(255, 255, 255, 0.14);
             --toggle-hover-border: rgba(255, 255, 255, 0.25);
             --toggle-icon-color: #e8e8e8;
+            --row-highlight-bg: #1a3a5c;
+            --row-highlight-first-bg: #0d2b4a;
         }
 
-        /* ================================================================
-                   View Transitions 主题切换动画（基于类名控制，兼容可靠）
-                   ================================================================ */
+        /* ===== 页面过渡（平滑） ===== */
         html {
-            view-transition-name: root;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .layui-header,
+        .main_content,
+        .toolbar,
+        .pagination,
+        #resultContainer,
+        .footer-info,
+        .layui-header .logo,
+        .layui-header .sub,
+        .page-title,
+        .page-desc,
+        .badge,
+        .search-priority-hint,
+        .pagination .info,
+        .pagination .info strong,
+        .vp-color-mode-switch {
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
 
-        /* 扩张效果（暗 → 亮）：新视图从按钮中心向外扩散 */
-        html.to-light::view-transition-new(root) {
-            animation: expandFromCenter 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        html.to-light::view-transition-old(root) {
-            animation: none;
-            opacity: 0;
-        }
-
-        /* 收缩效果（亮 → 暗）：旧视图从全屏向按钮中心收缩 */
-        html.to-dark::view-transition-old(root) {
-            animation: shrinkToCenter 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        html.to-dark::view-transition-new(root) {
-            animation: none;
-        }
-
-        @keyframes expandFromCenter {
-            from {
-                clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
-            }
-            to {
-                clip-path: circle(150% at 50% 50%);
-            }
-        }
-
-        @keyframes shrinkToCenter {
-            from {
-                clip-path: circle(150% at 50% 50%);
-            }
-            to {
-                clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
-            }
-        }
-
-        /* ================================================================
-                   布局及组件样式（与原始版本一致，未做改动）
-                   ================================================================ */
-        .layui-layout-admin {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .layui-header {
-            background: var(--bg-header);
-            color: var(--nav-text);
-            height: 56px;
-            line-height: 56px;
-            padding: 0 24px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing);
-        }
-        .layui-header .logo {
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .layui-header .logo span {
-            color: #5fb8ff;
-        }
-        .layui-header .sub {
-            font-size: 13px;
-            opacity: 0.7;
-            color: var(--nav-sub);
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .main_content {
-            flex: 1;
-            background: var(--bg-primary);
-            padding: 20px 24px 30px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            transition: background var(--transition-duration) var(--easing);
-        }
-
-        .page-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            transition: color var(--transition-duration) var(--easing);
-        }
-        .page-desc {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 16px;
-            transition: color var(--transition-duration) var(--easing);
-        }
-
-        /* 主题切换按钮 */
+        /* ===== 按钮旋转动画 ===== */
         .vp-color-mode-switch {
             display: flex;
             align-items: center;
@@ -240,17 +153,35 @@
             background: var(--toggle-bg);
             color: var(--toggle-icon-color);
             cursor: pointer;
-            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            transition: background 0.2s, border-color 0.2s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             padding: 0;
             outline: none;
             flex-shrink: 0;
             overflow: hidden;
             position: relative;
+            will-change: transform;
         }
         .vp-color-mode-switch:hover {
             background: var(--toggle-hover-bg);
             border-color: var(--toggle-hover-border);
             transform: scale(1.05);
+        }
+        .vp-color-mode-switch.spin {
+            animation: spinOnce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes spinOnce {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            40% {
+                transform: rotate(180deg) scale(1.12);
+            }
+            70% {
+                transform: rotate(340deg) scale(0.95);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
         }
         .vp-color-mode-switch .icon-wrapper {
             position: relative;
@@ -278,7 +209,68 @@
             transform: scale(1) rotate(0deg);
         }
 
-        /* 工具栏 */
+        /* ===== 布局 ===== */
+        .layui-layout-admin {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .layui-header {
+            background: var(--bg-header);
+            color: var(--nav-text);
+            height: 56px;
+            line-height: 56px;
+            padding: 0 24px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+        .layui-header .logo {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .layui-header .logo span {
+            color: #5fb8ff;
+        }
+        .layui-header .sub {
+            font-size: 13px;
+            opacity: 0.7;
+            color: var(--nav-sub);
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .main_content {
+            flex: 1;
+            background: var(--bg-primary);
+            padding: 20px 24px 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.5s ease;
+        }
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color 0.5s ease;
+        }
+        .page-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 16px;
+            transition: color 0.5s ease;
+        }
+
+        /* ===== 工具栏 ===== */
         .toolbar {
             background: var(--bg-toolbar);
             padding: 10px 16px;
@@ -287,7 +279,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            transition: background var(--transition-duration) var(--easing);
+            transition: background 0.5s ease;
         }
         .toolbar-row {
             display: flex;
@@ -300,7 +292,7 @@
             font-weight: 500;
             color: var(--text-secondary);
             margin-right: 2px;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .toolbar select {
             padding: 6px 12px;
@@ -311,8 +303,7 @@
             color: var(--text-secondary);
             outline: none;
             cursor: pointer;
-            transition: background var(--transition-duration) var(--easing), color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         .toolbar select:focus {
             border-color: #5fb8ff;
@@ -326,8 +317,7 @@
             background: var(--bg-secondary);
             color: var(--text-secondary);
             outline: none;
-            transition: 0.2s, background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing), border-color var(--transition-duration) var(--easing);
+            transition: 0.2s, background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         .toolbar input[type="text"]:focus {
             border-color: #5fb8ff;
@@ -362,10 +352,8 @@
             padding: 4px 14px;
             border-radius: 20px;
             white-space: nowrap;
-            transition: background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease;
         }
-
         .search-options {
             display: flex;
             gap: 4px;
@@ -379,9 +367,7 @@
             background: var(--bg-secondary);
             color: var(--text-muted);
             cursor: pointer;
-            transition: 0.15s, background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: 0.15s, background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
             user-select: none;
             white-space: nowrap;
         }
@@ -398,7 +384,6 @@
             background: #3d9ee0;
             border-color: #3d9ee0;
         }
-
         .search-wrapper {
             position: relative;
             display: inline-flex;
@@ -437,9 +422,8 @@
             color: var(--text-muted);
             margin-left: 4px;
             white-space: nowrap;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
-
         .search-panel {
             position: absolute;
             top: calc(100% + 4px);
@@ -455,14 +439,11 @@
             display: none;
             max-height: 400px;
             overflow-y: auto;
-            transition: background var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing),
-                box-shadow var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
         .search-panel.active {
             display: block;
         }
-
         .history-header {
             display: flex;
             justify-content: space-between;
@@ -471,8 +452,7 @@
             border-bottom: 1px solid var(--border-color);
             font-size: 13px;
             color: var(--history-header-color);
-            transition: color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease, border-color 0.5s ease;
         }
         .history-header .clear-all-btn {
             background: none;
@@ -529,13 +509,12 @@
             text-align: center;
             color: var(--history-empty-color);
             font-size: 13px;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
-
         .candidate-section {
             padding: 4px 0;
             border-bottom: 1px solid var(--border-color);
-            transition: border-color var(--transition-duration) var(--easing);
+            transition: border-color 0.5s ease;
         }
         .candidate-section:last-child {
             border-bottom: none;
@@ -546,14 +525,13 @@
             color: var(--text-muted);
             font-weight: 600;
             background: var(--candidate-section-bg);
-            transition: background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease;
         }
         .candidate-section .section-title .count-badge {
             font-weight: normal;
             color: var(--text-muted);
             margin-left: 6px;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .candidate-list {
             list-style: none;
@@ -583,9 +561,10 @@
             color: var(--candidate-code-color);
             font-family: monospace;
             font-size: 12px;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
 
+        /* ===== 分页 ===== */
         .pagination {
             display: flex;
             align-items: center;
@@ -595,16 +574,16 @@
             padding: 8px 16px;
             border-radius: 8px;
             margin-bottom: 12px;
-            transition: background var(--transition-duration) var(--easing);
+            transition: background 0.5s ease;
         }
         .pagination .info {
             font-size: 14px;
             color: var(--text-secondary);
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .pagination .info strong {
             color: var(--text-primary);
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .pagination input[type="number"] {
             width: 60px;
@@ -615,9 +594,7 @@
             text-align: center;
             background: var(--bg-secondary);
             color: var(--text-secondary);
-            transition: background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         .pagination .btn {
             padding: 4px 14px;
@@ -627,8 +604,7 @@
             cursor: pointer;
             background: var(--badge-bg);
             color: var(--text-secondary);
-            transition: 0.2s, background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing);
+            transition: 0.2s, background 0.5s ease, color 0.5s ease;
         }
         .pagination .btn:hover {
             background: var(--border-color);
@@ -650,6 +626,7 @@
             background: var(--badge-bg);
         }
 
+        /* ===== 表格 ===== */
         #resultContainer {
             border-radius: 10px;
             border: 1px solid var(--border-color);
@@ -657,14 +634,13 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            transition: border-color var(--transition-duration) var(--easing);
+            transition: border-color 0.5s ease;
         }
         .table-scroll-x {
             overflow-x: auto;
             overflow-y: auto;
             flex: 1;
         }
-
         #resultTable {
             width: 100%;
             min-width: 780px;
@@ -673,7 +649,6 @@
             font-size: 14px;
             table-layout: fixed;
         }
-
         #resultHead {
             position: sticky;
             top: 0;
@@ -695,9 +670,7 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             height: 44px;
             vertical-align: middle;
-            transition: background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         #resultHead th:first-child {
             min-width: 52px;
@@ -710,7 +683,6 @@
             min-width: 42px;
             background: var(--table-header-bg) !important;
         }
-
         #resultBody td {
             padding: 6px 2px;
             text-align: center;
@@ -718,8 +690,7 @@
             vertical-align: middle;
             font-size: 13px;
             background: var(--bg-secondary);
-            transition: background 0.1s, color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: background 0.1s, color 0.5s ease, border-color 0.5s ease;
             word-break: break-all;
             position: relative;
             color: var(--text-secondary);
@@ -734,9 +705,15 @@
             font-size: 12px;
             border-right: 1px solid var(--border-color);
             white-space: nowrap;
-            transition: background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* ===== 行高亮 — 使用 CSS 变量，日间浅蓝，夜间深蓝 ===== */
+        #resultBody tr.highlight-row td {
+            background: var(--row-highlight-bg) !important;
+        }
+        #resultBody tr.highlight-row td:first-child {
+            background: var(--row-highlight-first-bg) !important;
         }
 
         .unicode_str {
@@ -750,45 +727,40 @@
             justify-content: center;
             gap: 4px;
             flex-wrap: wrap;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .unicode_str .empty-placeholder {
             color: var(--text-muted);
             font-size: 12px;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .unicode_hex {
             font-size: 11px;
             color: var(--text-muted);
             font-family: "SF Mono", "Menlo", monospace;
             margin-top: 1px;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
         .unicode_decimal {
             font-size: 10px;
             color: var(--text-muted);
             font-family: "SF Mono", "Menlo", monospace;
-            transition: color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease;
         }
-
         .ctrl-char {
             background: var(--ctrl-char-bg);
             border-radius: 3px;
             padding: 0 4px;
             color: var(--ctrl-char-text);
             font-size: 13px;
-            transition: background var(--transition-duration) var(--easing),
-                color var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, color 0.5s ease;
         }
-
         .highlight-cell {
             background: var(--highlight-bg) !important;
             border-radius: 4px;
             box-shadow: 0 0 0 2px var(--highlight-shadow);
-            transition: background var(--transition-duration) var(--easing),
-                box-shadow var(--transition-duration) var(--easing);
+            transition: background 0.5s ease, box-shadow 0.5s ease;
         }
-
         .copy-btn {
             display: inline-block;
             font-size: 12px;
@@ -814,11 +786,11 @@
             color: #28a745;
             transform: scale(1);
         }
-
         #resultHead.scrolled th {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
         }
 
+        /* ===== 页脚 ===== */
         .footer-info {
             margin-top: 18px;
             text-align: center;
@@ -826,8 +798,7 @@
             font-size: 13px;
             border-top: 1px solid var(--footer-border);
             padding-top: 18px;
-            transition: color var(--transition-duration) var(--easing),
-                border-color var(--transition-duration) var(--easing);
+            transition: color 0.5s ease, border-color 0.5s ease;
         }
         .footer-info a {
             color: #5fb8ff;
@@ -841,6 +812,7 @@
             color: #5fb8ff;
         }
 
+        /* ===== Toast ===== */
         #copyToast {
             position: fixed;
             bottom: 30px;
@@ -860,6 +832,7 @@
             opacity: 1;
         }
 
+        /* ===== 响应式 ===== */
         @media (max-width: 640px) {
             .main_content {
                 padding: 12px;
@@ -937,6 +910,7 @@
             }
         }
 
+        /* ===== 滚动条 ===== */
         .table-scroll-x::-webkit-scrollbar,
         .main_content::-webkit-scrollbar {
             width: 8px;
@@ -946,13 +920,13 @@
         .main_content::-webkit-scrollbar-track {
             background: var(--scrollbar-track);
             border-radius: 4px;
-            transition: background var(--transition-duration) var(--easing);
+            transition: background 0.5s ease;
         }
         .table-scroll-x::-webkit-scrollbar-thumb,
         .main_content::-webkit-scrollbar-thumb {
             background: var(--scrollbar-thumb);
             border-radius: 4px;
-            transition: background var(--transition-duration) var(--easing);
+            transition: background 0.5s ease;
         }
         .table-scroll-x::-webkit-scrollbar-thumb:hover,
         .main_content::-webkit-scrollbar-thumb:hover {
@@ -964,11 +938,9 @@
 
     <div class="layui-layout-admin">
 
-        <!-- ===== 顶部导航 ===== -->
         <header class="layui-header">
             <div class="logo">📋 <span>Unicode</span> 全平面查看器</div>
             <div class="header-right">
-                <!-- 主题切换按钮 -->
                 <button type="button" class="vp-color-mode-switch" id="colorModeSwitch" title="切换主题">
                     <span class="icon-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon auto-icon active" viewBox="0 0 1024 1024" fill="currentColor">
@@ -986,13 +958,11 @@
             </div>
         </header>
 
-        <!-- ===== 主内容 ===== -->
         <div class="main_content" id="mainContent">
 
             <div class="page-title">全 Unicode 平面查看器</div>
             <div class="page-desc" id="planeDesc">基本多文种平面 (BMP) · 共 65,536 个字符 · 点击 📋 复制字符</div>
 
-            <!-- 工具栏 -->
             <div class="toolbar">
                 <div class="toolbar-row">
                     <label for="planeSelect">📂 字符集</label>
@@ -1032,7 +1002,6 @@
                 </div>
             </div>
 
-            <!-- 分页 -->
             <div class="pagination">
                 <button class="btn" id="prevPage" title="上一页">◀ 上一页</button>
                 <span class="info">第 <strong id="currentPageDisplay">1</strong> / <span id="totalPagesDisplay">256</span> 页</span>
@@ -1044,7 +1013,6 @@
                 <button class="btn" id="lastPageBtn">末页</button>
             </div>
 
-            <!-- 表格 -->
             <div id="resultContainer">
                 <div class="table-scroll-x" id="tableScroll">
                     <table class="layui-table" id="resultTable">
@@ -1068,7 +1036,6 @@
         </div>
     </div>
 
-    <!-- 复制提示 -->
     <div id="copyToast">✅ 已复制到剪贴板</div>
 
     <script>
@@ -1076,12 +1043,11 @@
             'use strict';
 
             // ================================================================
-            // 1. 主题切换模块（类名控制，精准收缩）
+            // 1. 主题切换模块（平滑过渡 + 按钮旋转，无 View Transition）
             // ================================================================
 
             const THEME_KEY = 'unicode_viewer_theme';
             const MODES = ['system', 'light', 'dark'];
-
             const htmlEl = document.documentElement;
             const switchBtn = document.getElementById('colorModeSwitch');
 
@@ -1111,40 +1077,17 @@
 
             function applyTheme(mode, animate = false) {
                 const effective = getEffectiveTheme(mode);
-                const oldEffective = htmlEl.getAttribute('data-theme') || 'light';
-
+                htmlEl.setAttribute('data-theme', effective);
+                localStorage.setItem(THEME_KEY, mode);
                 setActiveIcon(mode);
-
-                const shouldAnimate = animate && document.startViewTransition && (oldEffective !== effective);
-
-                if (shouldAnimate) {
-                    // 根据目标主题确定方向类
-                    const directionClass = effective === 'light' ? 'to-light' : 'to-dark';
-
-                    // 获取按钮中心坐标
-                    const rect = switchBtn.getBoundingClientRect();
-                    const cx = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-                    const cy = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
-                    htmlEl.style.setProperty('--x', cx + '%');
-                    htmlEl.style.setProperty('--y', cy + '%');
-
-                    // ★ 关键：在 startViewTransition 之前添加类，确保旧视图捕获到该类
-                    htmlEl.classList.add(directionClass);
-
-                    // 启动过渡
-                    const transition = document.startViewTransition(() => {
-                        htmlEl.setAttribute('data-theme', effective);
-                        localStorage.setItem(THEME_KEY, mode);
-                    });
-
-                    // 过渡完成后移除类
-                    transition.finally(() => {
-                        htmlEl.classList.remove('to-light', 'to-dark');
-                    });
-                } else {
-                    // 无动画直接切换
-                    htmlEl.setAttribute('data-theme', effective);
-                    localStorage.setItem(THEME_KEY, mode);
+                if (animate) {
+                    switchBtn.classList.remove('spin');
+                    void switchBtn.offsetWidth;
+                    switchBtn.classList.add('spin');
+                    switchBtn.addEventListener('animationend', function onEnd() {
+                        switchBtn.classList.remove('spin');
+                        switchBtn.removeEventListener('animationend', onEnd);
+                    }, { once: true });
                 }
             }
 
@@ -1183,7 +1126,7 @@
             }
 
             // ================================================================
-            // 2. Unicode 查看器（全部保留）
+            // 2. Unicode 查看器（完整功能）
             // ================================================================
 
             const PLANES = {
@@ -2050,26 +1993,27 @@
             mainContent.addEventListener('scroll', updateShadow);
             tableScroll.addEventListener('scroll', updateShadow);
 
+            // ================================================================
+            // 行高亮交互：点击已高亮行则取消高亮，否则高亮该行
+            // ================================================================
             tbody.addEventListener('click', function(e) {
+                // 如果点击的是复制按钮，不处理行高亮
                 if (e.target.closest('.copy-btn')) return;
                 const td = e.target.closest('td');
                 if (!td) return;
                 const tr = td.closest('tr');
                 if (!tr) return;
-                document.querySelectorAll('#resultBody tr.highlight-row').forEach(r => r.classList.remove('highlight-row'));
-                tr.classList.add('highlight-row');
-            });
 
-            const styleExtra = document.createElement('style');
-            styleExtra.textContent = `
-                        #resultBody tr.highlight-row td {
-                            background: #e8f4ff !important;
-                        }
-                        #resultBody tr.highlight-row td:first-child {
-                            background: #d4e6ff !important;
-                        }
-                    `;
-            document.head.appendChild(styleExtra);
+                // 如果当前行已经高亮，则取消高亮
+                if (tr.classList.contains('highlight-row')) {
+                    tr.classList.remove('highlight-row');
+                } else {
+                    // 否则先清除所有高亮，再高亮当前行
+                    document.querySelectorAll('#resultBody tr.highlight-row')
+                        .forEach(r => r.classList.remove('highlight-row'));
+                    tr.classList.add('highlight-row');
+                }
+            });
 
             function populatePlaneSelect() {
                 planeSelect.innerHTML = '';
@@ -2091,7 +2035,7 @@
             switchPlane(0x0000);
             updateClearBtn();
             renderHistory();
-            console.log('✅ 主题切换动画已修正：日间→夜间为黑色收缩效果');
+            console.log('✅ 全部功能已加载，主题切换动画已优化，行高亮支持点击取消');
         })();
     </script>
 
